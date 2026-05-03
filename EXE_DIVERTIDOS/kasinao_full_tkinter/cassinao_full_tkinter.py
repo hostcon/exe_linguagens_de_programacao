@@ -80,7 +80,7 @@ def girar():
     botao.config(state="disabled")
     resultado_label.config(text="Girando...")
 
-    tocar_som("spin.mp3")  # opcional
+    tocar_som("sounds/spin.mp3")  # opcional
 
     animar_giro()
 
@@ -97,7 +97,7 @@ def finalizar_giro():
 
     if premio > 0:
         saldo += premio
-        tocar_som("ae-kasinao_2.mp3")  # opcional
+        tocar_som("sounds/ae-kasinao_2.mp3")  # opcional
 
     salvar_saldo(saldo)
 
@@ -110,7 +110,7 @@ def finalizar_giro():
 # INTERFACE
 # ==============================
 janela = tk.Tk()
-janela.title("🎰 Slots Paraná PRO")
+janela.title("🎰 Can’t Get Over")
 janela.geometry("400x300")
 janela.configure(bg="#1e1e1e")
 janela.resizable(False, False)
@@ -118,7 +118,7 @@ janela.resizable(False, False)
 # Título
 titulo = tk.Label(
     janela,
-    text="🎰 Slots Paraná",
+    text="🎰 Ae Kasinão",
     font=("Helvetica", 18, "bold"),
     fg="#FFD700",
     bg="#1e1e1e"
