@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Slots</title>
+
+<link rel="manifest" href="/static/manifest.json">
+
+<script>
+if("serviceWorker" in navigator){
+  navigator.serviceWorker.register("/static/sw.js");
+}
+</script>
+
+<link rel="stylesheet" href="/static/style.css">
+</head>
+
+<body>
+
+<h1>🎰 Slots Paraná</h1>
+
+<div id="login">
+  <input id="user" placeholder="Usuário">
+  <input id="pwd" type="password">
+  <button onclick="login()">Entrar</button>
+  <button onclick="register()">Cadastrar</button>
+</div>
+
+<div id="game" style="display:none;">
+  <h2 id="saldo"></h2>
+
+  <div class="slots">
+    <span id="s1">❓</span>
+    <span id="s2">❓</span>
+    <span id="s3">❓</span>
+  </div>
+
+  <button onclick="spin()">🎰</button>
+</div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
