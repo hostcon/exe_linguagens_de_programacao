@@ -1,5 +1,5 @@
 from flask import Flask, render_template, request, jsonify
-import sqlite3, random
+import sqlite3, random, bcrypt
 
 app = Flask(__name__)
 
@@ -9,11 +9,18 @@ CUSTO = 2
 def db():
     return sqlite3.connect("slot.db")
 
-# cria tabelas
+# INIT DB
 with db() as conn:
     c = conn.cursor()
-    c.execute("CREATE TABLE IF NOT EXISTS users (username TEXT PRIMARY KEY, password TEXT, saldo REAL)")
-    c.execute("CREATE TABLE IF NOT EXISTS achievements (username TEXT, nome TEXT)")
+    c.execute("""CREATE TABLE IF NOT EXISTS users (
+        username TEXT PRIMARY KEY,
+        password TEXT,
+        saldo REAL)""")
+
+    c.execute("""CREATE TABLE IF NOT EXISTS achievements (
+        username TEXT,
+        nome TEXT)""")
+
     conn.commit()
 
 # =====================
@@ -23,11 +30,12 @@ with db() as conn:
 def index():
     return render_template("index.html")
 
+# 🔐 LOGIN
 @app.route("/login", methods=["POST"])
 def login():
     data = request.json
     user = data["user"]
-    pwd = data["pwd"]
+    pwd = data["pwd"].encode()
 
     with db() as conn:
         c = conn.cursor()
@@ -35,18 +43,33 @@ def login():
         u = c.fetchone()
 
         if u:
-            if u[1] != pwd:
-                return jsonify({"ok": False, "msg": "Senha incorreta"})
-        else:
-            c.execute("INSERT INTO users VALUES (?, ?, ?)", (user, pwd, 20))
+            if pwd:  # só valida se senha foi enviada
+                if not bcrypt.checkpw(pwd, u[1].encode()):
+                    return jsonify({"ok": False, "msg": "Senha incorreta"})
 
+        return jsonify({"ok": True, "saldo": u[2]})
+
+# 🆕 CADASTRO
+@app.route("/register", methods=["POST"])
+def register():
+    data = request.json
+    user = data["user"]
+    pwd = data["pwd"].encode()
+
+    with db() as conn:
+        c = conn.cursor()
+        c.execute("SELECT * FROM users WHERE username=?", (user,))
+        if c.fetchone():
+            return jsonify({"ok": False, "msg": "Usuário já existe"})
+
+        hash_pwd = bcrypt.hashpw(pwd, bcrypt.gensalt()).decode()
+
+        c.execute("INSERT INTO users VALUES (?, ?, ?)", (user, hash_pwd, 20))
         conn.commit()
 
-        c.execute("SELECT saldo FROM users WHERE username=?", (user,))
-        saldo = c.fetchone()[0]
+    return jsonify({"ok": True})
 
-    return jsonify({"ok": True, "saldo": saldo})
-
+# 🎰 SPIN
 @app.route("/spin", methods=["POST"])
 def spin():
     user = request.json["user"]
@@ -76,14 +99,14 @@ def spin():
 
     return jsonify({"ok": True, "r": r, "saldo": saldo, "premio": premio})
 
+# 🏆 RANKING
 @app.route("/ranking")
 def ranking():
     with db() as conn:
         c = conn.cursor()
         c.execute("SELECT username, saldo FROM users ORDER BY saldo DESC LIMIT 10")
-        data = c.fetchall()
+        return jsonify(c.fetchall())
 
-    return jsonify(data)
-
+# =====================
 if __name__ == "__main__":
     app.run(debug=True)

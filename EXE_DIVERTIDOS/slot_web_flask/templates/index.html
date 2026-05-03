@@ -2,19 +2,23 @@
 <html>
 <head>
 <meta charset="UTF-8">
-<title>🎰 Slots Web</title>
+<title>🎰 Can’t Get Over</title>
 <link rel="stylesheet" href="/static/style.css">
 </head>
 <body>
 
-<h1>🎰 Kasinão da Piazada</h1>
+<h1>🎰 Kasinao da Piazada</h1>
 
+<!-- LOGIN -->
 <div id="login">
   <input id="user" placeholder="Usuário">
   <input id="pwd" type="password" placeholder="Senha">
-  <button onclick="login()">Login</button>
+  <br><br>
+  <button onclick="login()">Entrar</button>
+  <button onclick="register()">Cadastrar</button>
 </div>
 
+<!-- GAME -->
 <div id="game" style="display:none;">
   <h2 id="saldo"></h2>
 
@@ -28,6 +32,12 @@
   <p id="msg"></p>
 
   <button onclick="verRanking()">🏆 Ranking</button>
+  <button onclick="logout()">🚪 Sair</button>
+
+  <h3>🎵 Áudio</h3>
+  <input type="range" min="0" max="1" step="0.1" value="0.3"
+         onchange="setVolume(this.value)">
+  <button onclick="toggleMute()">🔇 Mute</button>
 </div>
 
 <script src="/static/app.js"></script>
