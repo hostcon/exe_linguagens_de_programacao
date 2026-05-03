@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>🎰 Slots Web</title>
+<link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+<h1>🎰 Kasinão da Piazada</h1>
+
+<div id="login">
+  <input id="user" placeholder="Usuário">
+  <input id="pwd" type="password" placeholder="Senha">
+  <button onclick="login()">Login</button>
+</div>
+
+<div id="game" style="display:none;">
+  <h2 id="saldo"></h2>
+
+  <div class="slots">
+    <span id="s1">❓</span>
+    <span id="s2">❓</span>
+    <span id="s3">❓</span>
+  </div>
+
+  <button onclick="spin()">🎰 GIRAR</button>
+  <p id="msg"></p>
+
+  <button onclick="verRanking()">🏆 Ranking</button>
+</div>
+
+<script src="/static/app.js"></script>
+</body>
+</html>
