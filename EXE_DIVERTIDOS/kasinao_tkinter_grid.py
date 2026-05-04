@@ -1,6 +1,9 @@
 import tkinter as tk
 import random
 
+
+
+
 class CaçaNiquel:
     def __init__(self):
         self.saldo = 20.0
@@ -10,7 +13,7 @@ class CaçaNiquel:
         self.premios = {3: 20, 2: 5}  # 3 iguais = 20, 2 iguais = 5
         
         self.root = tk.Tk()
-        self.root.title("🎰 Kassinão do Sesi")
+        self.root.title("🎰 Kasinão do Sesi")
         self.root.geometry("420x380")
         self.root.resizable(False, False)
         self.root.configure(bg="#1e1e1e")
@@ -19,7 +22,7 @@ class CaçaNiquel:
         
     def criar_interface(self):
         # Título
-        titulo = tk.Label(self.root, text="🎰 Kassinão do Sesi", 
+        titulo = tk.Label(self.root, text="🎰 Kasinão do Sesi", 
                          font=("Arial", 20, "bold"), fg="#ffd700", bg="#1e1e1e")
         titulo.pack(pady=15)
 
