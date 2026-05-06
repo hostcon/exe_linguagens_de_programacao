@@ -1,11 +1,7 @@
-import random
-
-# 14. MÁQUINA DE SLOTS
+import random  # 14. MÁQUINA DE SLOTS
 simbolos = ["🍵", "🌰", "🐂", "⭐", "🍊"]
 saldo = 20.0
-
-print("=== Máquina de Slots - Tema Paraná ===\n")
-
+print("=== Kassinão do Senai ===\n")
 while saldo >= 2:
     input("\nPressione ENTER para girar (custa R$2)...")
     saldo -= 2
