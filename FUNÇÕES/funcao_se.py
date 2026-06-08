@@ -1,4 +1,3 @@
-
 # Definição de uma função chamada "se" que imita a função SE do Excel
 # Parâmetros:
 # - condicao: uma expressão que será avaliada como verdadeira ou falsa
