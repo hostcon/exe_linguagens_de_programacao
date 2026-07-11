@@ -11,7 +11,7 @@ def gerar_pdf():
     servico = combo_servico.get()
     
     # Pega o texto digitado no campo "Valor"
-    valor = entrada_valor.get()
+    valor = float(entrada_valor.get())
 
     # ========== VALIDAÇÃO DOS CAMPOS ==========
     # Verifica se algum campo está vazio (string vazia)
