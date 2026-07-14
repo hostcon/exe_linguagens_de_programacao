@@ -1,0 +1,2654 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>PySide6 para Iniciantes — Apostila Completa</title>
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/styles/github-dark.min.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/highlight.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/python.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/highlight.js/11.9.0/languages/xml.min.js"></script>
+<style>
+  :root {
+    --bg: #0d1117;
+    --sidebar: #161b22;
+    --surface: #1c2230;
+    --surface2: #21262d;
+    --border: #30363d;
+    --accent: #00b4d8;
+    --accent2: #0077b6;
+    --text: #e6edf3;
+    --text2: #8b949e;
+    --amber: #f59e0b;
+    --green: #3fb950;
+    --red: #f85149;
+    --purple: #a371f7;
+    --pink: #db61a2;
+    --radius: 8px;
+    --sidebar-w: 280px;
+    --font: 'Segoe UI', system-ui, sans-serif;
+    --mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font);
+    font-size: 15px;
+    line-height: 1.7;
+    display: flex;
+    min-height: 100vh;
+  }
+
+  /* ── SIDEBAR ─────────────────────────────────────────── */
+  #sidebar {
+    width: var(--sidebar-w);
+    min-width: var(--sidebar-w);
+    background: var(--sidebar);
+    border-right: 1px solid var(--border);
+    position: fixed;
+    top: 0; left: 0; bottom: 0;
+    overflow-y: auto;
+    z-index: 100;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .sidebar-logo {
+    padding: 20px 20px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .sidebar-logo h1 {
+    font-size: 17px;
+    font-weight: 700;
+    color: var(--accent);
+    letter-spacing: -0.3px;
+  }
+  .sidebar-logo p {
+    font-size: 12px;
+    color: var(--text2);
+    margin-top: 3px;
+  }
+
+  .sidebar-nav { padding: 12px 0; flex: 1; }
+  .nav-section {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1.2px;
+    color: var(--text2);
+    text-transform: uppercase;
+    padding: 10px 20px 4px;
+  }
+  .nav-item {
+    display: block;
+    padding: 6px 20px 6px 28px;
+    color: var(--text2);
+    text-decoration: none;
+    font-size: 13px;
+    border-left: 2px solid transparent;
+    transition: all 0.15s;
+  }
+  .nav-item:hover { color: var(--text); background: rgba(255,255,255,0.04); }
+  .nav-item.active {
+    color: var(--accent);
+    border-left-color: var(--accent);
+    background: rgba(0,180,216,0.08);
+  }
+  .nav-badge {
+    float: right;
+    font-size: 10px;
+    background: var(--surface2);
+    color: var(--text2);
+    padding: 1px 6px;
+    border-radius: 10px;
+    margin-top: 1px;
+  }
+
+  /* ── MAIN ────────────────────────────────────────────── */
+  #main {
+    margin-left: var(--sidebar-w);
+    flex: 1;
+    max-width: 900px;
+    padding: 48px 48px 80px;
+  }
+
+  /* ── SEÇÕES ──────────────────────────────────────────── */
+  .section {
+    margin-bottom: 64px;
+    scroll-margin-top: 24px;
+  }
+
+  .section-header {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin-bottom: 24px;
+    padding-bottom: 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .section-num {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--accent2);
+    color: #fff;
+    font-size: 14px;
+    font-weight: 700;
+    flex-shrink: 0;
+  }
+  .section-title { font-size: 22px; font-weight: 700; color: var(--text); }
+  .section-sub { font-size: 14px; color: var(--text2); margin-top: 2px; }
+
+  p { margin: 12px 0; color: var(--text); }
+  h3 { font-size: 16px; font-weight: 600; color: var(--text); margin: 24px 0 10px; }
+  h4 { font-size: 14px; font-weight: 600; color: var(--accent); margin: 16px 0 8px; }
+
+  /* ── CODE BLOCKS ─────────────────────────────────────── */
+  .code-block {
+    position: relative;
+    margin: 16px 0;
+    border-radius: var(--radius);
+    border: 1px solid var(--border);
+    overflow: hidden;
+  }
+  .code-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: var(--surface2);
+    padding: 8px 16px;
+    border-bottom: 1px solid var(--border);
+  }
+  .code-lang {
+    font-size: 11px;
+    color: var(--text2);
+    font-family: var(--mono);
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+  }
+  .code-filename {
+    font-size: 12px;
+    color: var(--accent);
+    font-family: var(--mono);
+  }
+  .copy-btn {
+    font-size: 11px;
+    color: var(--text2);
+    background: transparent;
+    border: 1px solid var(--border);
+    padding: 3px 10px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: var(--font);
+  }
+  .copy-btn:hover { color: var(--text); border-color: var(--text2); }
+  .copy-btn.copied { color: var(--green); border-color: var(--green); }
+
+  .code-block pre {
+    margin: 0;
+    padding: 16px;
+    background: #0d1117 !important;
+    overflow-x: auto;
+    font-size: 13.5px;
+    line-height: 1.65;
+  }
+  .code-block code {
+    font-family: var(--mono) !important;
+    background: transparent !important;
+  }
+
+  /* ── CALLOUTS ────────────────────────────────────────── */
+  .callout {
+    display: flex;
+    gap: 12px;
+    padding: 14px 16px;
+    border-radius: var(--radius);
+    margin: 16px 0;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .callout-icon { font-size: 18px; flex-shrink: 0; margin-top: 1px; }
+  .callout.tip { background: rgba(245,158,11,0.1); border: 1px solid rgba(245,158,11,0.3); }
+  .callout.tip .callout-icon { color: var(--amber); }
+  .callout.info { background: rgba(0,180,216,0.08); border: 1px solid rgba(0,180,216,0.25); }
+  .callout.info .callout-icon { color: var(--accent); }
+  .callout.warn { background: rgba(248,81,73,0.08); border: 1px solid rgba(248,81,73,0.25); }
+  .callout.warn .callout-icon { color: var(--red); }
+  .callout.success { background: rgba(63,185,80,0.08); border: 1px solid rgba(63,185,80,0.25); }
+  .callout.success .callout-icon { color: var(--green); }
+  .callout-body strong { color: inherit; font-weight: 600; }
+
+  /* ── CONCEPT CARDS ───────────────────────────────────── */
+  .card-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 12px;
+    margin: 16px 0;
+  }
+  .card {
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 16px;
+  }
+  .card-icon { font-size: 24px; margin-bottom: 8px; }
+  .card-title { font-size: 13px; font-weight: 700; color: var(--accent); margin-bottom: 4px; }
+  .card-desc { font-size: 12px; color: var(--text2); line-height: 1.5; }
+
+  /* ── WIDGET TABLE ────────────────────────────────────── */
+  .wtable {
+    width: 100%;
+    border-collapse: collapse;
+    margin: 16px 0;
+    font-size: 13px;
+  }
+  .wtable th {
+    text-align: left;
+    padding: 10px 14px;
+    background: var(--surface2);
+    color: var(--text2);
+    font-size: 11px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    border-bottom: 1px solid var(--border);
+  }
+  .wtable td {
+    padding: 9px 14px;
+    border-bottom: 1px solid var(--border);
+    color: var(--text);
+  }
+  .wtable tr:last-child td { border-bottom: none; }
+  .wtable tr:hover td { background: rgba(255,255,255,0.02); }
+  .wtable code {
+    font-family: var(--mono);
+    font-size: 12px;
+    background: var(--surface2);
+    padding: 2px 7px;
+    border-radius: 4px;
+    color: var(--purple);
+  }
+
+  /* ── INLINE CODE ─────────────────────────────────────── */
+  code {
+    font-family: var(--mono);
+    font-size: 13px;
+    background: var(--surface2);
+    padding: 2px 7px;
+    border-radius: 4px;
+    color: var(--purple);
+  }
+
+  /* ── HERO ────────────────────────────────────────────── */
+  .hero {
+    background: linear-gradient(135deg, #0d1117 0%, #0a1628 60%, #0d1117 100%);
+    border: 1px solid var(--border);
+    border-radius: 12px;
+    padding: 40px;
+    margin-bottom: 48px;
+    position: relative;
+    overflow: hidden;
+  }
+  .hero::before {
+    content: '';
+    position: absolute;
+    top: -50px; right: -50px;
+    width: 200px; height: 200px;
+    background: radial-gradient(circle, rgba(0,180,216,0.12) 0%, transparent 70%);
+    border-radius: 50%;
+  }
+  .hero-label {
+    font-size: 11px;
+    font-weight: 700;
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    color: var(--accent);
+    margin-bottom: 12px;
+  }
+  .hero h1 {
+    font-size: 32px;
+    font-weight: 800;
+    line-height: 1.2;
+    margin-bottom: 12px;
+    background: linear-gradient(135deg, #e6edf3, #00b4d8);
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+  .hero p { color: var(--text2); font-size: 15px; max-width: 560px; margin: 0; }
+  .hero-tags { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 20px; }
+  .hero-tag {
+    font-size: 11px;
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    padding: 4px 12px;
+    border-radius: 20px;
+    color: var(--text2);
+    font-family: var(--mono);
+  }
+
+  /* ── SIGNAL/SLOT DIAGRAM ─────────────────────────────── */
+  .signal-diagram {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    border-radius: var(--radius);
+    padding: 24px;
+    margin: 16px 0;
+    flex-wrap: wrap;
+  }
+  .sd-box {
+    background: var(--surface2);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 10px 18px;
+    text-align: center;
+    min-width: 120px;
+  }
+  .sd-label { font-size: 10px; text-transform: uppercase; letter-spacing: 1px; color: var(--text2); }
+  .sd-name { font-size: 14px; font-weight: 700; margin-top: 2px; font-family: var(--mono); }
+  .sd-name.signal { color: #f97316; }
+  .sd-name.slot { color: var(--green); }
+  .sd-name.connect { color: var(--accent); }
+  .sd-arrow {
+    padding: 0 12px;
+    color: var(--accent);
+    font-size: 22px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+
+  /* ── UI FILE DIAGRAM ─────────────────────────────────── */
+  .ui-flow {
+    display: flex;
+    align-items: stretch;
+    gap: 0;
+    margin: 16px 0;
+    flex-wrap: wrap;
+  }
+  .ui-step {
+    flex: 1;
+    min-width: 140px;
+    background: var(--surface);
+    border: 1px solid var(--border);
+    padding: 16px;
+    text-align: center;
+    position: relative;
+  }
+  .ui-step:first-child { border-radius: var(--radius) 0 0 var(--radius); }
+  .ui-step:last-child { border-radius: 0 var(--radius) var(--radius) 0; }
+  .ui-step + .ui-step { border-left: none; }
+  .ui-step-icon { font-size: 28px; margin-bottom: 8px; }
+  .ui-step-name { font-size: 13px; font-weight: 700; color: var(--text); }
+  .ui-step-desc { font-size: 11px; color: var(--text2); margin-top: 4px; }
+  .ui-step-arrow {
+    position: absolute;
+    right: -14px;
+    top: 50%;
+    transform: translateY(-50%);
+    color: var(--accent);
+    font-size: 20px;
+    z-index: 1;
+    background: var(--bg);
+    padding: 0 2px;
+  }
+
+  /* ── EXERCISE ────────────────────────────────────────── */
+  .exercise {
+    background: rgba(163,113,247,0.07);
+    border: 1px solid rgba(163,113,247,0.25);
+    border-radius: var(--radius);
+    padding: 20px;
+    margin: 20px 0;
+  }
+  .exercise-header {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 12px;
+  }
+  .exercise-badge {
+    font-size: 10px;
+    font-weight: 700;
+    letter-spacing: 1px;
+    text-transform: uppercase;
+    background: rgba(163,113,247,0.2);
+    color: var(--purple);
+    padding: 3px 10px;
+    border-radius: 4px;
+  }
+  .exercise-title { font-size: 14px; font-weight: 700; color: var(--text); }
+  .exercise ol { padding-left: 20px; margin-top: 8px; }
+  .exercise li { font-size: 13px; color: var(--text2); margin: 4px 0; }
+
+  /* ── SCROLLBAR ───────────────────────────────────────── */
+  ::-webkit-scrollbar { width: 6px; height: 6px; }
+  ::-webkit-scrollbar-track { background: transparent; }
+  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 3px; }
+
+  /* ── PROGRESS BAR ────────────────────────────────────── */
+  #progress-bar {
+    position: fixed;
+    top: 0; left: 0;
+    height: 2px;
+    background: var(--accent);
+    width: 0%;
+    transition: width 0.1s;
+    z-index: 999;
+  }
+
+  /* ── MOBILE ──────────────────────────────────────────── */
+  @media (max-width: 768px) {
+    #sidebar { display: none; }
+    #main { margin-left: 0; padding: 24px 20px 60px; }
+  }
+
+  hr { border: none; border-top: 1px solid var(--border); margin: 32px 0; }
+
+  .highlight-inline { color: var(--amber); font-weight: 600; }
+
+  .steps { counter-reset: step; padding: 0; list-style: none; }
+  .steps li {
+    counter-increment: step;
+    display: flex;
+    gap: 14px;
+    margin-bottom: 14px;
+    align-items: flex-start;
+  }
+  .steps li::before {
+    content: counter(step);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 24px; height: 24px;
+    background: var(--accent2);
+    color: white;
+    border-radius: 50%;
+    font-size: 12px;
+    font-weight: 700;
+    flex-shrink: 0;
+    margin-top: 2px;
+  }
+</style>
+</head>
+<body>
+
+<div id="progress-bar"></div>
+
+<!-- ══════════════════════════════════════════════════════
+     SIDEBAR
+══════════════════════════════════════════════════════ -->
+<nav id="sidebar">
+  <div class="sidebar-logo">
+    <h1>⬡ PySide6</h1>
+    <p>Apostila para Iniciantes · SENAI</p>
+  </div>
+  <div class="sidebar-nav">
+    <div class="nav-section">Fundamentos</div>
+    <a class="nav-item active" href="#s01">01 · Introdução e Instalação</a>
+    <a class="nav-item" href="#s02">02 · Primeira Janela</a>
+    <a class="nav-item" href="#s03">03 · Widgets Essenciais</a>
+    <a class="nav-item" href="#s04">04 · Layouts</a>
+    <a class="nav-item" href="#s05">05 · Signals e Slots</a>
+    <div class="nav-section">Intermediário</div>
+    <a class="nav-item" href="#s06">06 · Widgets de Formulário</a>
+    <a class="nav-item" href="#s07">07 · Diálogos</a>
+    <a class="nav-item" href="#s08">08 · Menus e Barra de Status</a>
+    <div class="nav-section">Qt Designer</div>
+    <a class="nav-item" href="#s09">09 · Qt Designer e .ui</a>
+    <a class="nav-item" href="#s10">10 · Objetos Nomeados no Backend</a>
+    <a class="nav-item" href="#s11">11 · QDialog com .ui</a>
+    <div class="nav-section">Projeto</div>
+    <a class="nav-item" href="#s12">12 · Projeto Integrador <span class="nav-badge">Final</span></a>
+  </div>
+</nav>
+
+<!-- ══════════════════════════════════════════════════════
+     MAIN
+══════════════════════════════════════════════════════ -->
+<main id="main">
+
+  <!-- HERO -->
+  <div class="hero">
+    <div class="hero-label">SENAI · Programação · Wagner R. da Silva</div>
+    <h1>PySide6 para Iniciantes</h1>
+    <p>Do zero à sua primeira aplicação desktop com Python e Qt. Aprenda a criar GUIs modernas, conectar eventos, usar o Qt Designer e integrar arquivos .ui ao backend.</p>
+    <div class="hero-tags">
+      <span class="hero-tag">python 3.10+</span>
+      <span class="hero-tag">pyside6 6.x</span>
+      <span class="hero-tag">qt designer</span>
+      <span class="hero-tag">signals &amp; slots</span>
+      <span class="hero-tag">.ui files</span>
+    </div>
+  </div>
+
+
+  <!-- ══════════════════════════════════════════════════
+       01 · INTRODUÇÃO E INSTALAÇÃO
+  ══════════════════════════════════════════════════ -->
+  <section class="section" id="s01">
+    <div class="section-header">
+      <div class="section-num">1</div>
+      <div>
+        <div class="section-title">Introdução e Instalação</div>
+        <div class="section-sub">O que é PySide6, por que usar e como configurar o ambiente</div>
+      </div>
+    </div>
+
+    <p>
+      <strong>PySide6</strong> é o binding oficial do Qt para Python, mantido pela The Qt Company.
+      Permite criar aplicações desktop multiplataforma — Windows, Linux e macOS — usando Python puro.
+      É gratuito sob licença LGPL para uso comercial e educacional.
+    </p>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon">🖥️</div>
+        <div class="card-title">Multiplataforma</div>
+        <div class="card-desc">Um único código roda no Windows, Linux e macOS sem alterações.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🐍</div>
+        <div class="card-title">100% Python</div>
+        <div class="card-desc">Todo o código fica em Python. Qt Designer gera arquivos que você importa.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">🎨</div>
+        <div class="card-title">Qt Designer</div>
+        <div class="card-desc">Editor visual drag-and-drop para montar interfaces sem escrever código.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">⚡</div>
+        <div class="card-title">Signals &amp; Slots</div>
+        <div class="card-desc">Sistema de eventos reativo e desacoplado, o coração do Qt.</div>
+      </div>
+    </div>
+
+    <h3>Instalação</h3>
+    <ol class="steps">
+      <li>Certifique-se de ter o <strong>Python 3.10+</strong> instalado (<code>python --version</code>)</li>
+      <li>Instale o PySide6 com pip</li>
+      <li>Verifique a instalação com um import simples</li>
+      <li>Abra o Qt Designer (já vem embutido!)</li>
+    </ol>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">bash</span>
+        <span class="code-filename">terminal</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+      </div>
+      <pre><code class="language-bash"># Instalar PySide6 (inclui Qt Designer e pyside6-uic)
+pip install pyside6
+
+# Verificar versão instalada
+python -c "import PySide6; print(PySide6.__version__)"
+
+# Abrir o Qt Designer
+pyside6-designer
+
+# Converter arquivo .ui para .py (ver seção 9)
+pyside6-uic minha_janela.ui -o minha_janela_ui.py</code></pre>
+    </div>
+
+    <div class="callout info">
+      <div class="callout-icon">ℹ️</div>
+      <div class="callout-body">
+        <strong>PyQt6 vs PySide6:</strong> As duas bibliotecas são quase idênticas na API — ambas
+        fazem binding para Qt6. A diferença principal é a licença: PySide6 é LGPL (mais liberal),
+        PyQt6 é GPL/Comercial. Para fins educacionais, ambas funcionam igual.
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════
+       02 · PRIMEIRA JANELA
+  ══════════════════════════════════════════════════ -->
+  <section class="section" id="s02">
+    <div class="section-header">
+      <div class="section-num">2</div>
+      <div>
+        <div class="section-title">Primeira Janela</div>
+        <div class="section-sub">QApplication, QMainWindow e QWidget — a estrutura mínima</div>
+      </div>
+    </div>
+
+    <p>
+      Toda aplicação PySide6 precisa de três coisas: uma <code>QApplication</code> (única, gerencia o loop de eventos),
+      uma janela principal (geralmente <code>QMainWindow</code> ou <code>QWidget</code>), e o <code>app.exec()</code>
+      que mantém a aplicação rodando.
+    </p>
+
+    <h3>Exemplo 1 — Janela mais simples possível</h3>
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">python</span>
+        <span class="code-filename">01_janela_minima.py</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+      </div>
+      <pre><code class="language-python">import sys
+from PySide6.QtWidgets import QApplication, QMainWindow
+
+# 1. Criar a aplicação (recebe sys.argv para argumentos de linha de comando)
+app = QApplication(sys.argv)
+
+# 2. Criar a janela principal
+janela = QMainWindow()
+janela.setWindowTitle("Minha Primeira Janela")
+janela.resize(600, 400)   # largura x altura em pixels
+janela.show()             # exibir a janela
+
+# 3. Iniciar o loop de eventos (a aplicação fica viva aqui)
+sys.exit(app.exec())</code></pre>
+    </div>
+
+    <h3>Exemplo 2 — Janela com classe (forma correta para projetos reais)</h3>
+    <p>
+      Usar herança de <code>QMainWindow</code> é a forma padrão de organizar o código.
+      Tudo que compõe a janela fica no <code>__init__</code>.
+    </p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">python</span>
+        <span class="code-filename">02_janela_classe.py</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+      </div>
+      <pre><code class="language-python">import sys
+from PySide6.QtWidgets import QApplication, QMainWindow, QLabel
+from PySide6.QtCore import Qt
+
+class MinhaJanela(QMainWindow):
+    """Janela principal da aplicação."""
+
+    def __init__(self):
+        # Sempre chame o construtor da classe-pai primeiro!
+        super().__init__()
+
+        # Configurações da janela
+        self.setWindowTitle("PySide6 — Aula 02")
+        self.setMinimumSize(400, 300)   # tamanho mínimo
+        self.resize(640, 480)           # tamanho inicial
+
+        # Widget central — QMainWindow EXIGE um widget central
+        label = QLabel("Olá, PySide6! 🎉")
+        label.setAlignment(Qt.AlignCenter)  # centralizar texto
+
+        # Definir o widget central da janela
+        self.setCentralWidget(label)
+
+
+# Ponto de entrada padrão Python
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    janela = MinhaJanela()
+    janela.show()
+    sys.exit(app.exec())</code></pre>
+    </div>
+
+    <div class="callout tip">
+      <div class="callout-icon">💡</div>
+      <div class="callout-body">
+        <strong>QMainWindow vs QWidget:</strong> Use <code>QMainWindow</code> quando precisar de
+        menu, barra de ferramentas ou barra de status. Use <code>QWidget</code> para janelas simples
+        ou sub-janelas. <code>QMainWindow</code> sempre precisa de um <code>setCentralWidget()</code>.
+      </div>
+    </div>
+
+    <h3>Exemplo 3 — Propriedades da janela</h3>
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">python</span>
+        <span class="code-filename">03_propriedades_janela.py</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+      </div>
+      <pre><code class="language-python">import sys
+from PySide6.QtWidgets import QApplication, QMainWindow
+from PySide6.QtGui import QIcon
+from PySide6.QtCore import Qt
+
+class Janela(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        self.setWindowTitle("Propriedades da Janela")
+
+        # Tamanho fixo (impede redimensionamento)
+        # self.setFixedSize(640, 480)
+
+        # Tamanho com mínimo e máximo
+        self.setMinimumSize(400, 300)
+        self.setMaximumSize(1200, 800)
+        self.resize(640, 480)
+
+        # Centralizar a janela na tela
+        self.centralizar()
+
+        # Ícone (coloque um arquivo .ico ou .png na mesma pasta)
+        # self.setWindowIcon(QIcon("icone.png"))
+
+        # Remover botões de maximizar/minimizar (opcional)
+        # self.setWindowFlags(Qt.Window | Qt.WindowCloseButtonHint)
+
+    def centralizar(self):
+        """Centraliza a janela na tela do monitor."""
+        tela = self.screen().availableGeometry()
+        x = (tela.width()  - self.width())  // 2
+        y = (tela.height() - self.height()) // 2
+        self.move(x, y)
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    janela = Janela()
+    janela.show()
+    sys.exit(app.exec())</code></pre>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-header">
+        <span class="exercise-badge">Exercício 01</span>
+        <span class="exercise-title">Minha primeira janela personalizada</span>
+      </div>
+      <ol>
+        <li>Crie um arquivo <code>minha_janela.py</code></li>
+        <li>Defina uma classe <code>Janela</code> que herda de <code>QMainWindow</code></li>
+        <li>Configure título, tamanho (800×500) e centralize na tela</li>
+        <li>Adicione um <code>QLabel</code> com seu nome como widget central</li>
+        <li>Execute e veja o resultado</li>
+      </ol>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════
+       03 · WIDGETS ESSENCIAIS
+  ══════════════════════════════════════════════════ -->
+  <section class="section" id="s03">
+    <div class="section-header">
+      <div class="section-num">3</div>
+      <div>
+        <div class="section-title">Widgets Essenciais</div>
+        <div class="section-sub">QLabel, QPushButton, QLineEdit, QTextEdit e mais</div>
+      </div>
+    </div>
+
+    <p>
+      Widgets são os blocos de construção da interface gráfica. Cada elemento visual
+      (botão, caixa de texto, rótulo) é um widget. Abaixo os mais usados:
+    </p>
+
+    <table class="wtable">
+      <thead>
+        <tr><th>Widget</th><th>Uso</th><th>Método principal</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>QLabel</code></td><td>Exibir texto ou imagem</td><td><code>.setText()</code> / <code>.setPixmap()</code></td></tr>
+        <tr><td><code>QPushButton</code></td><td>Botão clicável</td><td><code>.clicked.connect()</code></td></tr>
+        <tr><td><code>QLineEdit</code></td><td>Campo de texto (1 linha)</td><td><code>.text()</code> / <code>.setText()</code></td></tr>
+        <tr><td><code>QTextEdit</code></td><td>Área de texto (múltiplas linhas)</td><td><code>.toPlainText()</code></td></tr>
+        <tr><td><code>QCheckBox</code></td><td>Caixa de marcação</td><td><code>.isChecked()</code></td></tr>
+        <tr><td><code>QRadioButton</code></td><td>Botão de opção exclusiva</td><td><code>.isChecked()</code></td></tr>
+        <tr><td><code>QComboBox</code></td><td>Lista dropdown</td><td><code>.currentText()</code></td></tr>
+        <tr><td><code>QSpinBox</code></td><td>Número inteiro com setas</td><td><code>.value()</code></td></tr>
+        <tr><td><code>QSlider</code></td><td>Controle deslizante</td><td><code>.value()</code></td></tr>
+        <tr><td><code>QProgressBar</code></td><td>Barra de progresso</td><td><code>.setValue()</code></td></tr>
+      </tbody>
+    </table>
+
+    <h3>Exemplo — Vários widgets numa janela</h3>
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">python</span>
+        <span class="code-filename">04_widgets_basicos.py</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+      </div>
+      <pre><code class="language-python">import sys
+from PySide6.QtWidgets import (
+    QApplication, QWidget, QVBoxLayout,
+    QLabel, QPushButton, QLineEdit,
+    QTextEdit, QCheckBox
+)
+from PySide6.QtCore import Qt
+
+class WidgetsDemo(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Widgets Básicos")
+        self.resize(420, 500)
+
+        # Layout vertical para empilhar os widgets
+        layout = QVBoxLayout()
+        self.setLayout(layout)
+
+        # ── QLabel ──────────────────────────────────────────
+        titulo = QLabel("Cadastro de Aluno")
+        titulo.setAlignment(Qt.AlignCenter)
+        # Estilo inline (subset de CSS)
+        titulo.setStyleSheet("font-size: 18px; font-weight: bold; color: #00b4d8; padding: 8px;")
+        layout.addWidget(titulo)
+
+        # ── QLineEdit ───────────────────────────────────────
+        self.campo_nome = QLineEdit()
+        self.campo_nome.setPlaceholderText("Digite seu nome completo...")
+        layout.addWidget(QLabel("Nome:"))
+        layout.addWidget(self.campo_nome)
+
+        # QLineEdit com modo senha (esconde os caracteres)
+        self.campo_senha = QLineEdit()
+        self.campo_senha.setPlaceholderText("Senha...")
+        self.campo_senha.setEchoMode(QLineEdit.EchoMode.Password)
+        layout.addWidget(QLabel("Senha:"))
+        layout.addWidget(self.campo_senha)
+
+        # ── QTextEdit ───────────────────────────────────────
+        layout.addWidget(QLabel("Observações:"))
+        self.area_texto = QTextEdit()
+        self.area_texto.setPlaceholderText("Digite observações aqui...")
+        self.area_texto.setMaximumHeight(80)
+        layout.addWidget(self.area_texto)
+
+        # ── QCheckBox ───────────────────────────────────────
+        self.check_ativo = QCheckBox("Aluno ativo")
+        self.check_ativo.setChecked(True)  # marcado por padrão
+        layout.addWidget(self.check_ativo)
+
+        # ── QPushButton ─────────────────────────────────────
+        btn_salvar = QPushButton("💾 Salvar")
+        btn_salvar.setStyleSheet("""
+            QPushButton {
+                background-color: #0077b6;
+                color: white;
+                padding: 8px 20px;
+                border-radius: 6px;
+                font-size: 14px;
+            }
+            QPushButton:hover { background-color: #00b4d8; }
+            QPushButton:pressed { background-color: #005f8d; }
+        """)
+        btn_salvar.clicked.connect(self.salvar)
+        layout.addWidget(btn_salvar)
+
+        # Label de resultado
+        self.label_resultado = QLabel("")
+        self.label_resultado.setAlignment(Qt.AlignCenter)
+        layout.addWidget(self.label_resultado)
+
+    def salvar(self):
+        """Lê os valores dos widgets e exibe no label."""
+        nome   = self.campo_nome.text()
+        obs    = self.area_texto.toPlainText()
+        ativo  = "Sim" if self.check_ativo.isChecked() else "Não"
+
+        if not nome:
+            self.label_resultado.setStyleSheet("color: #f85149;")
+            self.label_resultado.setText("⚠️ Preencha o nome!")
+            return
+
+        self.label_resultado.setStyleSheet("color: #3fb950;")
+        self.label_resultado.setText(f"✅ Salvo: {nome} | Ativo: {ativo}")
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    w = WidgetsDemo()
+    w.show()
+    sys.exit(app.exec())</code></pre>
+    </div>
+
+    <div class="callout tip">
+      <div class="callout-icon">💡</div>
+      <div class="callout-body">
+        <strong>StyleSheet:</strong> PySide6 aceita um subconjunto de CSS para estilizar widgets.
+        Use <code>widget.setStyleSheet("...")</code> ou defina estilos globais na aplicação com
+        <code>app.setStyleSheet(...)</code>. Suporta seletores como <code>QPushButton:hover</code>.
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════
+       04 · LAYOUTS
+  ══════════════════════════════════════════════════ -->
+  <section class="section" id="s04">
+    <div class="section-header">
+      <div class="section-num">4</div>
+      <div>
+        <div class="section-title">Layouts</div>
+        <div class="section-sub">Organizar widgets com QVBoxLayout, QHBoxLayout e QGridLayout</div>
+      </div>
+    </div>
+
+    <p>
+      Layouts são gerenciadores de posicionamento. Nunca use coordenadas fixas (x,y) — os
+      layouts se adaptam ao redimensionamento da janela automaticamente.
+    </p>
+
+    <div class="card-grid">
+      <div class="card">
+        <div class="card-icon">⬇️</div>
+        <div class="card-title">QVBoxLayout</div>
+        <div class="card-desc">Empilha widgets verticalmente, um abaixo do outro.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">➡️</div>
+        <div class="card-title">QHBoxLayout</div>
+        <div class="card-desc">Posiciona widgets horizontalmente, lado a lado.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">⊞</div>
+        <div class="card-title">QGridLayout</div>
+        <div class="card-desc">Grade com linhas e colunas — pode ocupar múltiplas células.</div>
+      </div>
+      <div class="card">
+        <div class="card-icon">📋</div>
+        <div class="card-title">QFormLayout</div>
+        <div class="card-desc">Pares label + campo, ideal para formulários.</div>
+      </div>
+    </div>
+
+    <h3>Exemplo — QVBoxLayout e QHBoxLayout</h3>
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">python</span>
+        <span class="code-filename">05_layouts_vbox_hbox.py</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+      </div>
+      <pre><code class="language-python">import sys
+from PySide6.QtWidgets import (
+    QApplication, QWidget, QVBoxLayout, QHBoxLayout,
+    QLabel, QPushButton, QLineEdit
+)
+
+class LayoutDemo(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Layouts — VBox + HBox")
+        self.resize(480, 300)
+
+        # Layout principal: VERTICAL
+        layout_principal = QVBoxLayout()
+        self.setLayout(layout_principal)
+
+        # Título no topo
+        layout_principal.addWidget(QLabel("📦 Controle de Estoque"))
+
+        # Campo de nome + botão numa linha horizontal
+        layout_nome = QHBoxLayout()
+        layout_nome.addWidget(QLabel("Produto:"))
+        self.campo_produto = QLineEdit()
+        layout_nome.addWidget(self.campo_produto)
+
+        # Adiciona o layout horizontal DENTRO do vertical
+        layout_principal.addLayout(layout_nome)
+
+        # Linha de quantidade
+        layout_qtd = QHBoxLayout()
+        layout_qtd.addWidget(QLabel("Qtd:"))
+        self.campo_qtd = QLineEdit()
+        self.campo_qtd.setMaximumWidth(80)
+        layout_qtd.addWidget(self.campo_qtd)
+        layout_qtd.addStretch()  # empurra tudo para a esquerda
+        layout_principal.addLayout(layout_qtd)
+
+        # Espaçador para empurrar botões para baixo
+        layout_principal.addStretch()
+
+        # Linha de botões no rodapé
+        layout_botoes = QHBoxLayout()
+        layout_botoes.addStretch()  # empurra botões para a direita
+        btn_cancelar = QPushButton("Cancelar")
+        btn_adicionar = QPushButton("✚ Adicionar")
+        btn_adicionar.clicked.connect(self.adicionar)
+        layout_botoes.addWidget(btn_cancelar)
+        layout_botoes.addWidget(btn_adicionar)
+        layout_principal.addLayout(layout_botoes)
+
+        self.label_status = QLabel("")
+        layout_principal.addWidget(self.label_status)
+
+    def adicionar(self):
+        prod = self.campo_produto.text()
+        qtd  = self.campo_qtd.text()
+        self.label_status.setText(f"Adicionado: {prod} x {qtd}")
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    w = LayoutDemo()
+    w.show()
+    sys.exit(app.exec())</code></pre>
+    </div>
+
+    <h3>Exemplo — QGridLayout (calculadora básica)</h3>
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">python</span>
+        <span class="code-filename">06_grid_layout.py</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+      </div>
+      <pre><code class="language-python">import sys
+from PySide6.QtWidgets import (
+    QApplication, QWidget, QGridLayout,
+    QPushButton, QLineEdit
+)
+
+class Calculadora(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Calculadora")
+        self.setFixedSize(260, 320)
+
+        layout = QGridLayout()
+        self.setLayout(layout)
+
+        # Display no topo — ocupa 4 colunas (col 0 até 3)
+        self.display = QLineEdit("0")
+        self.display.setReadOnly(True)
+        self.display.setStyleSheet("font-size: 22px; padding: 6px; text-align: right;")
+        layout.addWidget(self.display, 0, 0, 1, 4)  # row, col, rowspan, colspan
+
+        # Mapa de botões: (texto, linha, coluna)
+        botoes = [
+            ("7", 1, 0), ("8", 1, 1), ("9", 1, 2), ("÷", 1, 3),
+            ("4", 2, 0), ("5", 2, 1), ("6", 2, 2), ("×", 2, 3),
+            ("1", 3, 0), ("2", 3, 1), ("3", 3, 2), ("−", 3, 3),
+            ("0", 4, 0), (".",  4, 1), ("=", 4, 2), ("+", 4, 3),
+        ]
+
+        for texto, linha, coluna in botoes:
+            btn = QPushButton(texto)
+            btn.setMinimumHeight(50)
+            btn.clicked.connect(lambda checked, t=texto: self.clicar(t))
+            layout.addWidget(btn, linha, coluna)
+
+    def clicar(self, texto):
+        # Lógica simplificada para demonstrar o grid
+        atual = self.display.text()
+        if texto == "=":
+            try:
+                # Substituir símbolos pelos operadores Python
+                expr = atual.replace("÷", "/").replace("×", "*").replace("−", "-")
+                resultado = str(eval(expr))
+                self.display.setText(resultado)
+            except:
+                self.display.setText("Erro")
+        elif atual == "0" and texto not in ".+-×÷−":
+            self.display.setText(texto)
+        else:
+            self.display.setText(atual + texto)
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    w = Calculadora()
+    w.show()
+    sys.exit(app.exec())</code></pre>
+    </div>
+
+    <h3>Exemplo — QFormLayout</h3>
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">python</span>
+        <span class="code-filename">07_form_layout.py</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+      </div>
+      <pre><code class="language-python">import sys
+from PySide6.QtWidgets import (
+    QApplication, QWidget, QFormLayout, QVBoxLayout,
+    QLineEdit, QSpinBox, QComboBox, QPushButton, QLabel
+)
+
+class FormCadastro(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Cadastro — FormLayout")
+        self.resize(380, 280)
+
+        layout_v = QVBoxLayout(self)
+
+        # QFormLayout alinha labels + campos automaticamente
+        form = QFormLayout()
+
+        self.nome   = QLineEdit()
+        self.idade  = QSpinBox()
+        self.idade.setRange(1, 120)
+
+        self.curso  = QComboBox()
+        self.curso.addItems(["Python", "MySQL", "Redes", "Web Dev"])
+
+        form.addRow("Nome:",  self.nome)
+        form.addRow("Idade:", self.idade)
+        form.addRow("Curso:", self.curso)
+
+        layout_v.addLayout(form)
+
+        btn = QPushButton("Cadastrar")
+        btn.clicked.connect(self.cadastrar)
+        layout_v.addWidget(btn)
+
+        self.label = QLabel("")
+        layout_v.addWidget(self.label)
+
+    def cadastrar(self):
+        self.label.setText(
+            f"✅ {self.nome.text()}, {self.idade.value()} anos → {self.curso.currentText()}"
+        )
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    w = FormCadastro()
+    w.show()
+    sys.exit(app.exec())</code></pre>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════
+       05 · SIGNALS E SLOTS
+  ══════════════════════════════════════════════════ -->
+  <section class="section" id="s05">
+    <div class="section-header">
+      <div class="section-num">5</div>
+      <div>
+        <div class="section-title">Signals e Slots</div>
+        <div class="section-sub">O coração do Qt — comunicação desacoplada entre objetos</div>
+      </div>
+    </div>
+
+    <p>
+      O sistema de <strong>Signals &amp; Slots</strong> é o mecanismo de eventos do Qt.
+      Um <em>signal</em> é emitido quando algo acontece (botão clicado, texto mudou, valor alterado).
+      Um <em>slot</em> é uma função que responde a esse signal. A conexão é feita com <code>.connect()</code>.
+    </p>
+
+    <div class="signal-diagram">
+      <div class="sd-box">
+        <div class="sd-label">Widget</div>
+        <div class="sd-name signal">signal</div>
+      </div>
+      <div class="sd-arrow">
+        &nbsp;.connect()&nbsp;→
+      </div>
+      <div class="sd-box">
+        <div class="sd-label">Função</div>
+        <div class="sd-name slot">slot</div>
+      </div>
+      <div class="sd-arrow" style="padding-left:20px; font-size:14px; color:var(--text2);">
+        &nbsp;&nbsp;emite&nbsp;→&nbsp;executa
+      </div>
+    </div>
+
+    <h3>Exemplo — Signals básicos</h3>
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">python</span>
+        <span class="code-filename">08_signals_slots.py</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+      </div>
+      <pre><code class="language-python">import sys
+from PySide6.QtWidgets import (
+    QApplication, QWidget, QVBoxLayout, QHBoxLayout,
+    QLabel, QPushButton, QLineEdit, QSlider, QSpinBox
+)
+from PySide6.QtCore import Qt, Signal
+
+class SignalsDemo(QWidget):
+    # ── Signal customizado (opcional, avançado) ──────────
+    # Pode definir seus próprios signals com a classe Signal
+    nome_alterado = Signal(str)  # emite uma string
+
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Signals & Slots")
+        self.resize(460, 400)
+        layout = QVBoxLayout(self)
+
+        # ── Exemplo 1: clicked (sem argumento) ───────────
+        layout.addWidget(QLabel("── Botão ──────────────"))
+        self.contador = 0
+        self.label_contador = QLabel("Cliques: 0")
+        btn = QPushButton("Clique em mim!")
+
+        # .clicked é um Signal; passamos uma função como slot
+        btn.clicked.connect(self.incrementar)
+        layout.addWidget(btn)
+        layout.addWidget(self.label_contador)
+
+        # ── Exemplo 2: textChanged (emite a string atual) ─
+        layout.addWidget(QLabel("── Campo de texto ──────"))
+        campo = QLineEdit()
+        self.label_eco = QLabel("Você digitou: ")
+
+        # textChanged emite o texto atual a cada tecla
+        campo.textChanged.connect(self.mostrar_texto)
+        layout.addWidget(campo)
+        layout.addWidget(self.label_eco)
+
+        # ── Exemplo 3: valueChanged (emite um int) ────────
+        layout.addWidget(QLabel("── Slider ──────────────"))
+        h = QHBoxLayout()
+        self.slider = QSlider(Qt.Horizontal)
+        self.slider.setRange(0, 100)
+        self.label_slider = QLabel("50")
+        self.slider.setValue(50)
+
+        # valueChanged emite o valor atual como inteiro
+        self.slider.valueChanged.connect(self.atualizar_slider)
+        h.addWidget(self.slider)
+        h.addWidget(self.label_slider)
+        layout.addLayout(h)
+
+        # ── Exemplo 4: Signal customizado ────────────────
+        layout.addWidget(QLabel("── Signal customizado ──"))
+        campo2 = QLineEdit()
+        self.label_custom = QLabel("Aguardando...")
+
+        # Conectar nosso próprio signal a um slot
+        self.nome_alterado.connect(self.receber_nome)
+        # Emitir o signal customizado quando o texto mudar
+        campo2.textChanged.connect(self.nome_alterado)
+        layout.addWidget(campo2)
+        layout.addWidget(self.label_custom)
+
+    # ── SLOTS (funções que respondem aos signals) ─────────
+
+    def incrementar(self):
+        """Slot do botão — chamado sem argumentos."""
+        self.contador += 1
+        self.label_contador.setText(f"Cliques: {self.contador}")
+
+    def mostrar_texto(self, texto: str):
+        """Slot do textChanged — recebe o texto atual."""
+        self.label_eco.setText(f"Você digitou: {texto}")
+
+    def atualizar_slider(self, valor: int):
+        """Slot do valueChanged — recebe o novo valor."""
+        self.label_slider.setText(str(valor))
+
+    def receber_nome(self, nome: str):
+        """Slot do nosso signal customizado."""
+        self.label_custom.setText(f"Signal recebido: '{nome}'")
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    w = SignalsDemo()
+    w.show()
+    sys.exit(app.exec())</code></pre>
+    </div>
+
+    <div class="callout info">
+      <div class="callout-icon">ℹ️</div>
+      <div class="callout-body">
+        <strong>Tabela de signals comuns:</strong><br>
+        <code>QPushButton.clicked</code> → sem argumento<br>
+        <code>QLineEdit.textChanged</code> → <code>str</code><br>
+        <code>QLineEdit.returnPressed</code> → sem argumento (Enter)<br>
+        <code>QCheckBox.stateChanged</code> → <code>int</code> (0=desmarcado, 2=marcado)<br>
+        <code>QComboBox.currentIndexChanged</code> → <code>int</code><br>
+        <code>QSlider.valueChanged</code> → <code>int</code><br>
+        <code>QSpinBox.valueChanged</code> → <code>int</code>
+      </div>
+    </div>
+
+    <h3>Exemplo — Desconectar e múltiplas conexões</h3>
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">python</span>
+        <span class="code-filename">09_multi_conexoes.py</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+      </div>
+      <pre><code class="language-python">import sys
+from PySide6.QtWidgets import QApplication, QWidget, QVBoxLayout, QPushButton, QLabel
+
+class MultiConexao(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Múltiplas conexões")
+        layout = QVBoxLayout(self)
+
+        btn = QPushButton("Clique")
+        self.label1 = QLabel("Log 1: —")
+        self.label2 = QLabel("Log 2: —")
+
+        # Um signal pode ter MÚLTIPLOS slots conectados
+        btn.clicked.connect(self.slot_a)
+        btn.clicked.connect(self.slot_b)
+
+        layout.addWidget(btn)
+        layout.addWidget(self.label1)
+        layout.addWidget(self.label2)
+
+        btn_off = QPushButton("Desconectar slot_a")
+        btn_off.clicked.connect(lambda: btn.clicked.disconnect(self.slot_a))
+        layout.addWidget(btn_off)
+
+    def slot_a(self):
+        self.label1.setText("Log 1: slot_a executou!")
+
+    def slot_b(self):
+        self.label2.setText("Log 2: slot_b executou!")
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    w = MultiConexao()
+    w.show()
+    sys.exit(app.exec())</code></pre>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════
+       06 · WIDGETS DE FORMULÁRIO
+  ══════════════════════════════════════════════════ -->
+  <section class="section" id="s06">
+    <div class="section-header">
+      <div class="section-num">6</div>
+      <div>
+        <div class="section-title">Widgets de Formulário</div>
+        <div class="section-sub">QCheckBox, QRadioButton, QComboBox, QSpinBox, QSlider, QListWidget</div>
+      </div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">python</span>
+        <span class="code-filename">10_formulario_completo.py</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+      </div>
+      <pre><code class="language-python">import sys
+from PySide6.QtWidgets import (
+    QApplication, QWidget, QVBoxLayout, QHBoxLayout,
+    QFormLayout, QLabel, QLineEdit, QSpinBox, QDoubleSpinBox,
+    QComboBox, QCheckBox, QRadioButton, QButtonGroup,
+    QSlider, QProgressBar, QListWidget, QPushButton, QGroupBox
+)
+from PySide6.QtCore import Qt
+
+class FormularioCompleto(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Formulário Completo")
+        self.resize(480, 680)
+        layout = QVBoxLayout(self)
+        layout.setSpacing(12)
+
+        # ── Dados pessoais ────────────────────────────────
+        grupo1 = QGroupBox("Dados Pessoais")
+        form1 = QFormLayout(grupo1)
+
+        self.nome = QLineEdit()
+        self.idade = QSpinBox()
+        self.idade.setRange(1, 120)
+        self.altura = QDoubleSpinBox()
+        self.altura.setRange(0.5, 2.5)
+        self.altura.setSuffix(" m")
+        self.altura.setSingleStep(0.01)
+        self.altura.setValue(1.70)
+
+        form1.addRow("Nome:", self.nome)
+        form1.addRow("Idade:", self.idade)
+        form1.addRow("Altura:", self.altura)
+        layout.addWidget(grupo1)
+
+        # ── Curso ─────────────────────────────────────────
+        grupo2 = QGroupBox("Curso")
+        form2 = QFormLayout(grupo2)
+
+        # QComboBox — lista de seleção
+        self.combo_curso = QComboBox()
+        self.combo_curso.addItems(["Python Básico", "Python Avançado", "MySQL", "Redes", "Web Dev"])
+        self.combo_curso.currentIndexChanged.connect(self.curso_mudou)
+
+        # QSpinBox para horas
+        self.horas = QSpinBox()
+        self.horas.setRange(20, 400)
+        self.horas.setSuffix(" h")
+        self.horas.setValue(80)
+
+        form2.addRow("Curso:", self.combo_curso)
+        form2.addRow("Carga horária:", self.horas)
+        layout.addWidget(grupo2)
+
+        # ── Turno (RadioButtons — seleção exclusiva) ──────
+        grupo3 = QGroupBox("Turno")
+        h3 = QHBoxLayout(grupo3)
+
+        self.radio_manha   = QRadioButton("Manhã")
+        self.radio_tarde   = QRadioButton("Tarde")
+        self.radio_noite   = QRadioButton("Noite")
+        self.radio_manha.setChecked(True)  # padrão
+
+        # QButtonGroup garante exclusividade entre radios
+        self.grupo_turno = QButtonGroup()
+        for rb in [self.radio_manha, self.radio_tarde, self.radio_noite]:
+            self.grupo_turno.addButton(rb)
+            h3.addWidget(rb)
+        layout.addWidget(grupo3)
+
+        # ── Extras (CheckBoxes — múltipla seleção) ────────
+        grupo4 = QGroupBox("Recursos Extras")
+        h4 = QHBoxLayout(grupo4)
+        self.chk_lab   = QCheckBox("Acesso ao Lab")
+        self.chk_cert  = QCheckBox("Certificado")
+        self.chk_online = QCheckBox("Aulas Online")
+        h4.addWidget(self.chk_lab)
+        h4.addWidget(self.chk_cert)
+        h4.addWidget(self.chk_online)
+        layout.addWidget(grupo4)
+
+        # ── Nível (Slider + ProgressBar) ──────────────────
+        grupo5 = QGroupBox("Nível de Conhecimento Prévio")
+        v5 = QVBoxLayout(grupo5)
+        self.slider_nivel = QSlider(Qt.Horizontal)
+        self.slider_nivel.setRange(0, 100)
+        self.slider_nivel.setValue(30)
+        self.prog_nivel = QProgressBar()
+        self.prog_nivel.setRange(0, 100)
+        self.prog_nivel.setValue(30)
+        self.slider_nivel.valueChanged.connect(self.prog_nivel.setValue)
+        v5.addWidget(self.slider_nivel)
+        v5.addWidget(self.prog_nivel)
+        layout.addWidget(grupo5)
+
+        # ── Botão e resultado ─────────────────────────────
+        btn = QPushButton("📋 Gerar Resumo")
+        btn.clicked.connect(self.gerar_resumo)
+        layout.addWidget(btn)
+
+        self.lista_resultado = QListWidget()
+        self.lista_resultado.setMaximumHeight(120)
+        layout.addWidget(self.lista_resultado)
+
+    def curso_mudou(self, indice):
+        """Reage quando o ComboBox muda."""
+        print(f"Curso selecionado: {self.combo_curso.currentText()} (índice {indice})")
+
+    def turno_selecionado(self):
+        """Retorna o turno marcado."""
+        if self.radio_manha.isChecked(): return "Manhã"
+        if self.radio_tarde.isChecked(): return "Tarde"
+        return "Noite"
+
+    def extras_selecionados(self):
+        extras = []
+        if self.chk_lab.isChecked():   extras.append("Lab")
+        if self.chk_cert.isChecked():  extras.append("Certificado")
+        if self.chk_online.isChecked(): extras.append("Online")
+        return ", ".join(extras) if extras else "Nenhum"
+
+    def gerar_resumo(self):
+        self.lista_resultado.clear()
+        dados = [
+            f"Nome:   {self.nome.text()}",
+            f"Idade:  {self.idade.value()} anos",
+            f"Altura: {self.altura.value():.2f} m",
+            f"Curso:  {self.combo_curso.currentText()} ({self.horas.value()}h)",
+            f"Turno:  {self.turno_selecionado()}",
+            f"Extras: {self.extras_selecionados()}",
+            f"Nível:  {self.slider_nivel.value()}%",
+        ]
+        self.lista_resultado.addItems(dados)
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    w = FormularioCompleto()
+    w.show()
+    sys.exit(app.exec())</code></pre>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════
+       07 · DIÁLOGOS
+  ══════════════════════════════════════════════════ -->
+  <section class="section" id="s07">
+    <div class="section-header">
+      <div class="section-num">7</div>
+      <div>
+        <div class="section-title">Diálogos</div>
+        <div class="section-sub">QMessageBox, QInputDialog, QFileDialog e QDialog customizado</div>
+      </div>
+    </div>
+
+    <p>
+      Diálogos são janelas secundárias modais (bloqueiam a janela principal enquanto estão abertas).
+      Qt oferece vários diálogos prontos para situações comuns.
+    </p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">python</span>
+        <span class="code-filename">11_dialogos.py</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+      </div>
+      <pre><code class="language-python">import sys
+from PySide6.QtWidgets import (
+    QApplication, QWidget, QVBoxLayout, QPushButton, QLabel,
+    QMessageBox, QInputDialog, QFileDialog, QColorDialog,
+    QFontDialog, QDialog, QDialogButtonBox, QLineEdit, QFormLayout
+)
+
+class DialogosDemo(QWidget):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Diálogos")
+        self.resize(380, 420)
+        layout = QVBoxLayout(self)
+        self.resultado = QLabel("Resultado aparecerá aqui")
+        layout.addWidget(self.resultado)
+
+        # Botões para cada tipo de diálogo
+        botoes = [
+            ("💬 QMessageBox — Informação",   self.msg_info),
+            ("⚠️  QMessageBox — Pergunta",     self.msg_pergunta),
+            ("❌ QMessageBox — Erro",          self.msg_erro),
+            ("✏️  QInputDialog — Texto",        self.input_texto),
+            ("🔢 QInputDialog — Número",       self.input_numero),
+            ("📂 QFileDialog — Abrir",         self.abrir_arquivo),
+            ("💾 QFileDialog — Salvar",        self.salvar_arquivo),
+            ("🎨 QColorDialog",                self.escolher_cor),
+            ("🖊️  Diálogo Customizado",         self.dialogo_custom),
+        ]
+
+        for texto, slot in botoes:
+            btn = QPushButton(texto)
+            btn.clicked.connect(slot)
+            layout.addWidget(btn)
+
+    # ── QMessageBox ──────────────────────────────────────
+
+    def msg_info(self):
+        QMessageBox.information(self, "Informação", "Operação concluída com sucesso!")
+
+    def msg_pergunta(self):
+        resposta = QMessageBox.question(
+            self, "Confirmar",
+            "Deseja realmente excluir?",
+            QMessageBox.Yes | QMessageBox.No,
+            QMessageBox.No  # botão padrão
+        )
+        if resposta == QMessageBox.Yes:
+            self.resultado.setText("Usuário confirmou a exclusão.")
+        else:
+            self.resultado.setText("Usuário cancelou.")
+
+    def msg_erro(self):
+        QMessageBox.critical(self, "Erro", "Falha ao conectar com o banco de dados!")
+
+    # ── QInputDialog ─────────────────────────────────────
+
+    def input_texto(self):
+        # getText retorna (texto, ok)
+        texto, ok = QInputDialog.getText(self, "Nome", "Digite seu nome:")
+        if ok and texto:
+            self.resultado.setText(f"Nome digitado: {texto}")
+
+    def input_numero(self):
+        # getInt retorna (valor, ok)
+        valor, ok = QInputDialog.getInt(
+            self, "Quantidade", "Quantas unidades?",
+            value=1, min=1, max=1000
+        )
+        if ok:
+            self.resultado.setText(f"Quantidade: {valor}")
+
+    # ── QFileDialog ──────────────────────────────────────
+
+    def abrir_arquivo(self):
+        # getOpenFileName retorna (caminho, filtro_usado)
+        caminho, _ = QFileDialog.getOpenFileName(
+            self, "Abrir Arquivo", "",
+            "Todos os arquivos (*);;Texto (*.txt);;Python (*.py)"
+        )
+        if caminho:
+            self.resultado.setText(f"Arquivo: {caminho}")
+
+    def salvar_arquivo(self):
+        caminho, _ = QFileDialog.getSaveFileName(
+            self, "Salvar Como", "novo_arquivo.txt",
+            "Texto (*.txt);;Todos (*)"
+        )
+        if caminho:
+            self.resultado.setText(f"Salvar em: {caminho}")
+
+    # ── QColorDialog ─────────────────────────────────────
+
+    def escolher_cor(self):
+        cor = QColorDialog.getColor(parent=self, title="Escolha uma cor")
+        if cor.isValid():
+            self.resultado.setText(f"Cor: {cor.name()}")
+            self.resultado.setStyleSheet(f"color: {cor.name()};")
+
+    # ── Diálogo customizado ───────────────────────────────
+
+    def dialogo_custom(self):
+        dlg = DialogoCadastro(self)
+        if dlg.exec() == QDialog.Accepted:
+            dados = dlg.obter_dados()
+            self.resultado.setText(f"Cadastrado: {dados['nome']} / {dados['email']}")
+
+
+class DialogoCadastro(QDialog):
+    """Diálogo customizado criado por herança de QDialog."""
+
+    def __init__(self, parent=None):
+        super().__init__(parent)
+        self.setWindowTitle("Novo Cadastro")
+        self.resize(320, 160)
+
+        layout = QVBoxLayout(self)
+
+        form = QFormLayout()
+        self.campo_nome  = QLineEdit()
+        self.campo_email = QLineEdit()
+        form.addRow("Nome:",  self.campo_nome)
+        form.addRow("E-mail:", self.campo_email)
+        layout.addLayout(form)
+
+        # QDialogButtonBox provê botões OK/Cancelar padrão
+        botoes = QDialogButtonBox(
+            QDialogButtonBox.Ok | QDialogButtonBox.Cancel
+        )
+        botoes.accepted.connect(self.accept)  # OK  → fecha com Accepted
+        botoes.rejected.connect(self.reject)  # Cancel → fecha com Rejected
+        layout.addWidget(botoes)
+
+    def obter_dados(self):
+        return {
+            "nome":  self.campo_nome.text(),
+            "email": self.campo_email.text()
+        }
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    w = DialogosDemo()
+    w.show()
+    sys.exit(app.exec())</code></pre>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════
+       08 · MENUS E BARRA DE STATUS
+  ══════════════════════════════════════════════════ -->
+  <section class="section" id="s08">
+    <div class="section-header">
+      <div class="section-num">8</div>
+      <div>
+        <div class="section-title">Menus e Barra de Status</div>
+        <div class="section-sub">QMenuBar, QMenu, QAction, QToolBar, QStatusBar</div>
+      </div>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">python</span>
+        <span class="code-filename">12_menus.py</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+      </div>
+      <pre><code class="language-python">import sys
+from PySide6.QtWidgets import (
+    QApplication, QMainWindow, QLabel,
+    QToolBar, QMessageBox
+)
+from PySide6.QtGui import QAction, QKeySequence
+from PySide6.QtCore import Qt
+
+class JanelaComMenu(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("Menus e Status Bar")
+        self.resize(600, 400)
+
+        # Widget central
+        self.label = QLabel("Use o menu ou a barra de ferramentas")
+        self.label.setAlignment(Qt.AlignCenter)
+        self.setCentralWidget(self.label)
+
+        # Barra de status (rodapé)
+        self.statusBar().showMessage("Pronto.")
+
+        # Criar menus e toolbar
+        self.criar_menu()
+        self.criar_toolbar()
+
+    def criar_menu(self):
+        barra = self.menuBar()
+
+        # ── Menu Arquivo ──────────────────────────────────
+        menu_arquivo = barra.addMenu("&Arquivo")
+
+        acao_novo = QAction("&Novo", self)
+        acao_novo.setShortcut(QKeySequence("Ctrl+N"))
+        acao_novo.setStatusTip("Cria um novo documento")
+        acao_novo.triggered.connect(lambda: self.log("Novo"))
+        menu_arquivo.addAction(acao_novo)
+
+        acao_abrir = QAction("&Abrir...", self)
+        acao_abrir.setShortcut(QKeySequence("Ctrl+O"))
+        acao_abrir.triggered.connect(lambda: self.log("Abrir"))
+        menu_arquivo.addAction(acao_abrir)
+
+        menu_arquivo.addSeparator()  # linha divisória
+
+        acao_sair = QAction("&Sair", self)
+        acao_sair.setShortcut(QKeySequence("Ctrl+Q"))
+        acao_sair.triggered.connect(self.close)
+        menu_arquivo.addAction(acao_sair)
+
+        # ── Menu Editar ───────────────────────────────────
+        menu_editar = barra.addMenu("&Editar")
+        menu_editar.addAction(QAction("Copiar\tCtrl+C", self))
+        menu_editar.addAction(QAction("Colar\tCtrl+V",  self))
+
+        # ── Submenu ───────────────────────────────────────
+        menu_ajuda = barra.addMenu("A&juda")
+        submenu = menu_ajuda.addMenu("Idioma")
+        submenu.addAction(QAction("Português", self))
+        submenu.addAction(QAction("English",   self))
+        menu_ajuda.addSeparator()
+        acao_sobre = QAction("Sobre...", self)
+        acao_sobre.triggered.connect(self.sobre)
+        menu_ajuda.addAction(acao_sobre)
+
+    def criar_toolbar(self):
+        toolbar = QToolBar("Principal")
+        self.addToolBar(toolbar)
+
+        btn_novo   = QAction("📄 Novo",   self)
+        btn_abrir  = QAction("📂 Abrir",  self)
+        btn_salvar = QAction("💾 Salvar", self)
+
+        for acao in [btn_novo, btn_abrir, btn_salvar]:
+            acao.triggered.connect(lambda ch, a=acao: self.log(a.text()))
+            toolbar.addAction(acao)
+
+    def log(self, msg):
+        self.label.setText(f"Ação: {msg}")
+        self.statusBar().showMessage(f"Executado: {msg}", 3000)  # 3 seg
+
+    def sobre(self):
+        QMessageBox.about(self, "Sobre", "PySide6 Demo\nVersão 1.0")
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    w = JanelaComMenu()
+    w.show()
+    sys.exit(app.exec())</code></pre>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════
+       09 · QT DESIGNER E ARQUIVOS .UI
+  ══════════════════════════════════════════════════ -->
+  <section class="section" id="s09">
+    <div class="section-header">
+      <div class="section-num">9</div>
+      <div>
+        <div class="section-title">Qt Designer e Arquivos .ui</div>
+        <div class="section-sub">Criar interfaces visualmente e carregar no Python</div>
+      </div>
+    </div>
+
+    <p>
+      O <strong>Qt Designer</strong> é um editor visual onde você arrasta widgets para montar
+      a interface sem escrever código. Ele salva um arquivo <code>.ui</code> (XML) que
+      o Python carrega em tempo de execução.
+    </p>
+
+    <div class="ui-flow">
+      <div class="ui-step">
+        <div class="ui-step-arrow">→</div>
+        <div class="ui-step-icon">🎨</div>
+        <div class="ui-step-name">Qt Designer</div>
+        <div class="ui-step-desc">Montar a UI visualmente</div>
+      </div>
+      <div class="ui-step">
+        <div class="ui-step-arrow">→</div>
+        <div class="ui-step-icon">📄</div>
+        <div class="ui-step-name">janela.ui</div>
+        <div class="ui-step-desc">Arquivo XML salvo</div>
+      </div>
+      <div class="ui-step">
+        <div class="ui-step-arrow">→</div>
+        <div class="ui-step-icon">⚙️</div>
+        <div class="ui-step-name">pyside6-uic<br><small style="font-weight:400;font-size:10px;">(ou uic.loadUi)</small></div>
+        <div class="ui-step-desc">Converter ou carregar</div>
+      </div>
+      <div class="ui-step">
+        <div class="ui-step-icon">🐍</div>
+        <div class="ui-step-name">Python</div>
+        <div class="ui-step-desc">Backend com a lógica</div>
+      </div>
+    </div>
+
+    <h3>Como um arquivo .ui é por dentro (XML)</h3>
+    <p>
+      O Qt Designer gera um XML estruturado. Abaixo, um exemplo simplificado de
+      uma janela com um QLabel e um QPushButton onde cada widget tem um
+      <span class="highlight-inline">objectName</span> — que é o nome que você
+      usará no backend Python.
+    </p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">xml</span>
+        <span class="code-filename">janela_principal.ui</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+      </div>
+      <pre><code class="language-xml">&lt;?xml version="1.0" encoding="UTF-8"?&gt;
+&lt;ui version="4.0"&gt;
+ &lt;class&gt;MainWindow&lt;/class&gt;
+ &lt;widget class="QMainWindow" name="MainWindow"&gt;
+  &lt;property name="windowTitle"&gt;&lt;string&gt;Minha Janela&lt;/string&gt;&lt;/property&gt;
+  &lt;widget class="QWidget" name="centralwidget"&gt;
+   &lt;layout class="QVBoxLayout" name="verticalLayout"&gt;
+
+    &lt;!-- QLabel com objectName = "label_titulo" --&gt;
+    &lt;item&gt;
+     &lt;widget class="QLabel" name="label_titulo"&gt;
+      &lt;property name="text"&gt;&lt;string&gt;Bem-vindo!&lt;/string&gt;&lt;/property&gt;
+     &lt;/widget&gt;
+    &lt;/item&gt;
+
+    &lt;!-- QLineEdit com objectName = "input_nome" --&gt;
+    &lt;item&gt;
+     &lt;widget class="QLineEdit" name="input_nome"&gt;
+      &lt;property name="placeholderText"&gt;&lt;string&gt;Digite seu nome...&lt;/string&gt;&lt;/property&gt;
+     &lt;/widget&gt;
+    &lt;/item&gt;
+
+    &lt;!-- QPushButton com objectName = "btn_salvar" --&gt;
+    &lt;item&gt;
+     &lt;widget class="QPushButton" name="btn_salvar"&gt;
+      &lt;property name="text"&gt;&lt;string&gt;Salvar&lt;/string&gt;&lt;/property&gt;
+     &lt;/widget&gt;
+    &lt;/item&gt;
+
+   &lt;/layout&gt;
+  &lt;/widget&gt;
+ &lt;/widget&gt;
+&lt;/ui&gt;</code></pre>
+    </div>
+
+    <h3>Método 1 — Carregar .ui diretamente (recomendado para desenvolvimento)</h3>
+    <p>
+      Use <code>QUiLoader</code> ou o atalho <code>uic.loadUi()</code> para carregar o arquivo
+      <code>.ui</code> em tempo de execução — sem precisar converter para <code>.py</code>.
+    </p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">python</span>
+        <span class="code-filename">backend_loadui.py</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+      </div>
+      <pre><code class="language-python">import sys
+from PySide6.QtWidgets import QApplication, QMainWindow
+from PySide6.QtCore import QFile
+from PySide6.uic import loadUi   # ← importação do carregador
+
+class MinhaJanela(QMainWindow):
+    def __init__(self):
+        super().__init__()
+
+        # Carregar o arquivo .ui e aplicar NESTA instância (self)
+        # O arquivo deve estar na mesma pasta ou use o caminho completo
+        loadUi("janela_principal.ui", self)
+
+        # A partir daqui, todos os objectNames do .ui são
+        # atributos de self — acesse-os diretamente!
+
+        # self.label_titulo   → o QLabel que chamamos "label_titulo" no Designer
+        # self.input_nome     → o QLineEdit "input_nome"
+        # self.btn_salvar     → o QPushButton "btn_salvar"
+
+        # Conectar signal do botão ao nosso slot
+        self.btn_salvar.clicked.connect(self.salvar)
+
+    def salvar(self):
+        nome = self.input_nome.text()
+        if nome:
+            self.label_titulo.setText(f"Olá, {nome}! 👋")
+        else:
+            self.label_titulo.setText("⚠️ Digite um nome!")
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    janela = MinhaJanela()
+    janela.show()
+    sys.exit(app.exec())</code></pre>
+    </div>
+
+    <h3>Método 2 — Converter .ui para .py (recomendado para distribuição)</h3>
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">bash</span>
+        <span class="code-filename">terminal</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+      </div>
+      <pre><code class="language-bash"># Converter o .ui em um módulo Python
+pyside6-uic janela_principal.ui -o ui_janela_principal.py
+
+# O arquivo gerado contém uma classe Ui_MainWindow
+# que você importa no backend</code></pre>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">python</span>
+        <span class="code-filename">backend_convertido.py</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+      </div>
+      <pre><code class="language-python">import sys
+from PySide6.QtWidgets import QApplication, QMainWindow
+
+# Importar a classe gerada pelo pyside6-uic
+from ui_janela_principal import Ui_MainWindow
+
+class MinhaJanela(QMainWindow, Ui_MainWindow):
+    """
+    Herda QMainWindow (janela) E Ui_MainWindow (estrutura da UI).
+    Herança múltipla é o padrão para este método.
+    """
+
+    def __init__(self):
+        super().__init__()
+
+        # setupUi(self) monta todos os widgets na janela
+        self.setupUi(self)
+
+        # Agora self.btn_salvar, self.input_nome, etc. já existem
+        self.btn_salvar.clicked.connect(self.salvar)
+
+    def salvar(self):
+        nome = self.input_nome.text()
+        self.label_titulo.setText(f"Salvo: {nome}")
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    janela = MinhaJanela()
+    janela.show()
+    sys.exit(app.exec())</code></pre>
+    </div>
+
+    <div class="callout tip">
+      <div class="callout-icon">💡</div>
+      <div class="callout-body">
+        <strong>Qual método usar?</strong> Durante o desenvolvimento, use <code>loadUi()</code> —
+        você altera o .ui no Designer e já vê o resultado sem re-converter.
+        Para distribuir a aplicação final (empacotamento), converta com <code>pyside6-uic</code>
+        para ter tudo em Python puro.
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════
+       10 · OBJETOS NOMEADOS NO BACKEND
+  ══════════════════════════════════════════════════ -->
+  <section class="section" id="s10">
+    <div class="section-header">
+      <div class="section-num">10</div>
+      <div>
+        <div class="section-title">Objetos Nomeados no Backend</div>
+        <div class="section-sub">Como o objectName do Qt Designer vira atributo Python</div>
+      </div>
+    </div>
+
+    <p>
+      Esta é a seção mais importante para quem vai usar o Qt Designer.
+      O <strong>objectName</strong> que você define no Designer (no painel de propriedades)
+      se torna automaticamente um <strong>atributo de <code>self</code></strong> no backend,
+      após o <code>loadUi()</code> ou <code>setupUi()</code>.
+    </p>
+
+    <div class="callout warn">
+      <div class="callout-icon">⚠️</div>
+      <div class="callout-body">
+        <strong>Regra de ouro:</strong> O nome do atributo Python é <em>exatamente</em> o
+        <code>objectName</code> definido no Qt Designer. Se no Designer o campo se chama
+        <code>lineEdit_nome</code>, no Python você acessa com <code>self.lineEdit_nome</code>.
+        Erros de digitação causam <code>AttributeError</code>.
+      </div>
+    </div>
+
+    <h3>Exemplo completo — Designer + Backend integrado</h3>
+    <p>
+      Imagine que no Qt Designer você criou a seguinte interface (os <code>objectName</code>
+      estão indicados):
+    </p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">xml</span>
+        <span class="code-filename">cadastro_aluno.ui (estrutura)</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+      </div>
+      <pre><code class="language-xml">&lt;!-- Widgets e seus objectNames no Qt Designer --&gt;
+
+&lt;!-- QLineEdit --&gt; objectName = "lineEdit_nome"
+&lt;!-- QLineEdit --&gt; objectName = "lineEdit_email"
+&lt;!-- QSpinBox  --&gt; objectName = "spinBox_idade"
+&lt;!-- QComboBox --&gt; objectName = "comboBox_curso"
+&lt;!-- QCheckBox --&gt; objectName = "checkBox_ativo"
+&lt;!-- QTextEdit --&gt; objectName = "textEdit_obs"
+&lt;!-- QPushButton --&gt; objectName = "pushButton_salvar"
+&lt;!-- QPushButton --&gt; objectName = "pushButton_limpar"
+&lt;!-- QLabel    --&gt; objectName = "label_status"
+&lt;!-- QTableWidget --&gt; objectName = "tableWidget_alunos"</code></pre>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">python</span>
+        <span class="code-filename">backend_cadastro_aluno.py</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+      </div>
+      <pre><code class="language-python">import sys
+from PySide6.QtWidgets import QApplication, QMainWindow, QTableWidgetItem
+from PySide6.uic import loadUi
+
+class CadastroAluno(QMainWindow):
+    """
+    Backend da tela de cadastro de alunos.
+    Os objectNames do .ui são acessados como self.NOME.
+    """
+
+    def __init__(self):
+        super().__init__()
+        loadUi("cadastro_aluno.ui", self)
+
+        # ─────────────────────────────────────────────────
+        # Após loadUi(), TODOS os widgets nomeados no Designer
+        # se tornam atributos de self automaticamente.
+        # ─────────────────────────────────────────────────
+
+        # Configurações iniciais dos widgets
+        self.comboBox_curso.addItems(["Python", "MySQL", "Redes", "Web Dev"])
+        self.spinBox_idade.setRange(14, 80)
+        self.tableWidget_alunos.setColumnCount(4)
+        self.tableWidget_alunos.setHorizontalHeaderLabels(
+            ["Nome", "Email", "Idade", "Curso"]
+        )
+        self.tableWidget_alunos.horizontalHeader().setStretchLastSection(True)
+
+        # Conectar signals usando os objectNames como atributos
+        self.pushButton_salvar.clicked.connect(self.salvar_aluno)
+        self.pushButton_limpar.clicked.connect(self.limpar_campos)
+        self.lineEdit_nome.textChanged.connect(self.validar_formulario)
+        self.lineEdit_email.textChanged.connect(self.validar_formulario)
+
+        # Estado inicial
+        self.validar_formulario()
+
+    # ── Slots ─────────────────────────────────────────────
+
+    def salvar_aluno(self):
+        """Lê os widgets nomeados e insere na tabela."""
+        # Acessar valor de cada widget pelo objectName
+        nome   = self.lineEdit_nome.text().strip()
+        email  = self.lineEdit_email.text().strip()
+        idade  = self.spinBox_idade.value()         # int
+        curso  = self.comboBox_curso.currentText()  # str
+        ativo  = self.checkBox_ativo.isChecked()    # bool
+        obs    = self.textEdit_obs.toPlainText()    # str multi-linha
+
+        if not nome or not email:
+            self.label_status.setText("⚠️ Nome e e-mail são obrigatórios.")
+            self.label_status.setStyleSheet("color: #f59e0b;")
+            return
+
+        # Inserir linha na QTableWidget
+        linha = self.tableWidget_alunos.rowCount()
+        self.tableWidget_alunos.insertRow(linha)
+        self.tableWidget_alunos.setItem(linha, 0, QTableWidgetItem(nome))
+        self.tableWidget_alunos.setItem(linha, 1, QTableWidgetItem(email))
+        self.tableWidget_alunos.setItem(linha, 2, QTableWidgetItem(str(idade)))
+        self.tableWidget_alunos.setItem(linha, 3, QTableWidgetItem(curso))
+
+        # Atualizar o label de status (objectName: label_status)
+        self.label_status.setText(f"✅ {nome} cadastrado com sucesso!")
+        self.label_status.setStyleSheet("color: #3fb950;")
+
+        self.limpar_campos()
+
+    def limpar_campos(self):
+        """Limpa todos os campos de entrada."""
+        self.lineEdit_nome.clear()
+        self.lineEdit_email.clear()
+        self.spinBox_idade.setValue(14)
+        self.comboBox_curso.setCurrentIndex(0)
+        self.checkBox_ativo.setChecked(True)
+        self.textEdit_obs.clear()
+        self.lineEdit_nome.setFocus()
+
+    def validar_formulario(self):
+        """Habilita o botão salvar apenas se campos obrigatórios estiverem preenchidos."""
+        nome_ok  = bool(self.lineEdit_nome.text().strip())
+        email_ok = bool(self.lineEdit_email.text().strip())
+        # Habilitar/desabilitar o botão pelo objectName
+        self.pushButton_salvar.setEnabled(nome_ok and email_ok)
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    janela = CadastroAluno()
+    janela.show()
+    sys.exit(app.exec())</code></pre>
+    </div>
+
+    <h3>Referência rápida — objectName → método Python</h3>
+    <table class="wtable">
+      <thead>
+        <tr><th>Widget no Designer</th><th>Leitura de valor</th><th>Escrita de valor</th><th>Signal principal</th></tr>
+      </thead>
+      <tbody>
+        <tr><td><code>QLineEdit</code></td><td><code>.text()</code></td><td><code>.setText("...")</code></td><td><code>.textChanged</code></td></tr>
+        <tr><td><code>QTextEdit</code></td><td><code>.toPlainText()</code></td><td><code>.setPlainText("...")</code></td><td><code>.textChanged</code></td></tr>
+        <tr><td><code>QSpinBox</code></td><td><code>.value()</code></td><td><code>.setValue(10)</code></td><td><code>.valueChanged</code></td></tr>
+        <tr><td><code>QDoubleSpinBox</code></td><td><code>.value()</code></td><td><code>.setValue(3.14)</code></td><td><code>.valueChanged</code></td></tr>
+        <tr><td><code>QComboBox</code></td><td><code>.currentText()</code></td><td><code>.setCurrentIndex(0)</code></td><td><code>.currentIndexChanged</code></td></tr>
+        <tr><td><code>QCheckBox</code></td><td><code>.isChecked()</code></td><td><code>.setChecked(True)</code></td><td><code>.stateChanged</code></td></tr>
+        <tr><td><code>QRadioButton</code></td><td><code>.isChecked()</code></td><td><code>.setChecked(True)</code></td><td><code>.toggled</code></td></tr>
+        <tr><td><code>QSlider</code></td><td><code>.value()</code></td><td><code>.setValue(50)</code></td><td><code>.valueChanged</code></td></tr>
+        <tr><td><code>QLabel</code></td><td><code>.text()</code></td><td><code>.setText("...")</code></td><td>—</td></tr>
+        <tr><td><code>QPushButton</code></td><td>—</td><td><code>.setEnabled(True/False)</code></td><td><code>.clicked</code></td></tr>
+        <tr><td><code>QListWidget</code></td><td><code>.currentItem().text()</code></td><td><code>.addItem("...")</code></td><td><code>.itemClicked</code></td></tr>
+        <tr><td><code>QTableWidget</code></td><td><code>.item(r,c).text()</code></td><td><code>.setItem(r,c, QTableWidgetItem("..."))</code></td><td><code>.cellClicked</code></td></tr>
+        <tr><td><code>QProgressBar</code></td><td><code>.value()</code></td><td><code>.setValue(75)</code></td><td>—</td></tr>
+        <tr><td><code>QDateEdit</code></td><td><code>.date()</code></td><td><code>.setDate(QDate.currentDate())</code></td><td><code>.dateChanged</code></td></tr>
+      </tbody>
+    </table>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════
+       11 · QDIALOG COM .UI
+  ══════════════════════════════════════════════════ -->
+  <section class="section" id="s11">
+    <div class="section-header">
+      <div class="section-num">11</div>
+      <div>
+        <div class="section-title">QDialog com .ui</div>
+        <div class="section-sub">Criar diálogos usando Qt Designer e integrar ao backend</div>
+      </div>
+    </div>
+
+    <p>
+      Você pode criar <strong>diálogos completos no Qt Designer</strong> — não apenas a janela principal.
+      Basta criar um novo formulário do tipo <code>QDialog</code> no Designer e salvar como
+      <code>dialog_produto.ui</code>.
+    </p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">xml</span>
+        <span class="code-filename">dialog_produto.ui (estrutura)</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+      </div>
+      <pre><code class="language-xml">&lt;!-- No Qt Designer: Arquivo → Novo → Dialog with Buttons Bottom --&gt;
+&lt;!-- objectNames definidos no Dialog: --&gt;
+
+&lt;!-- QLineEdit  --&gt; objectName = "lineEdit_produto"
+&lt;!-- QLineEdit  --&gt; objectName = "lineEdit_preco"
+&lt;!-- QSpinBox   --&gt; objectName = "spinBox_estoque"
+&lt;!-- QDialogButtonBox --&gt; objectName = "buttonBox" (padrão do Designer)
+&lt;!-- Botões OK e Cancel já vêm configurados no buttonBox --&gt;</code></pre>
+    </div>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">python</span>
+        <span class="code-filename">dialog_produto.py</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+      </div>
+      <pre><code class="language-python">import sys
+from PySide6.QtWidgets import QApplication, QDialog, QMainWindow
+from PySide6.uic import loadUi
+
+class DialogProduto(QDialog):
+    """
+    Diálogo criado no Qt Designer e carregado com loadUi.
+    Abre em modo modal (bloqueando a janela pai).
+    """
+
+    def __init__(self, parent=None, dados_iniciais=None):
+        super().__init__(parent)
+        loadUi("dialog_produto.ui", self)
+
+        # buttonBox é o objectName padrão do QDialogButtonBox no Designer
+        # accepted e rejected são signals do QDialogButtonBox
+        self.buttonBox.accepted.connect(self.validar_e_aceitar)
+        self.buttonBox.rejected.connect(self.reject)
+
+        # Se estiver editando, pré-preencher os campos
+        if dados_iniciais:
+            self.lineEdit_produto.setText(dados_iniciais["nome"])
+            self.lineEdit_preco.setText(str(dados_iniciais["preco"]))
+            self.spinBox_estoque.setValue(dados_iniciais["estoque"])
+
+    def validar_e_aceitar(self):
+        """Valida antes de fechar com OK."""
+        nome = self.lineEdit_produto.text().strip()
+        if not nome:
+            # Mostrar erro sem fechar o diálogo
+            self.lineEdit_produto.setStyleSheet("border: 1px solid red;")
+            self.lineEdit_produto.setPlaceholderText("Campo obrigatório!")
+            return  # NÃO chamar accept() — mantém o diálogo aberto
+        self.accept()  # fecha com resultado Accepted
+
+    def obter_dados(self):
+        """Retorna os dados preenchidos no diálogo."""
+        try:
+            preco = float(self.lineEdit_preco.text().replace(",", "."))
+        except ValueError:
+            preco = 0.0
+        return {
+            "nome":    self.lineEdit_produto.text().strip(),
+            "preco":   preco,
+            "estoque": self.spinBox_estoque.value()
+        }
+
+
+# ── Janela principal que usa o diálogo ────────────────────────────
+
+class JanelaPrincipal(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        loadUi("janela_principal.ui", self)
+
+        # Conectar botão "Novo Produto" da janela principal
+        self.pushButton_novo.clicked.connect(self.abrir_dialogo_novo)
+        self.pushButton_editar.clicked.connect(self.abrir_dialogo_editar)
+
+    def abrir_dialogo_novo(self):
+        """Abre o diálogo para cadastrar um novo produto."""
+        dlg = DialogProduto(parent=self)
+        # exec() é MODAL — trava a janela principal até fechar o diálogo
+        if dlg.exec() == QDialog.Accepted:
+            dados = dlg.obter_dados()
+            print(f"Novo produto: {dados}")
+            self.statusBar().showMessage(
+                f"Produto '{dados['nome']}' cadastrado!", 3000
+            )
+
+    def abrir_dialogo_editar(self):
+        """Abre o diálogo pre-preenchido para edição."""
+        # Dados fictícios — na prática viria do item selecionado na tabela
+        dados_existentes = {"nome": "Notebook", "preco": 2500.00, "estoque": 5}
+
+        dlg = DialogProduto(parent=self, dados_iniciais=dados_existentes)
+        if dlg.exec() == QDialog.Accepted:
+            dados = dlg.obter_dados()
+            print(f"Produto editado: {dados}")
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    janela = JanelaPrincipal()
+    janela.show()
+    sys.exit(app.exec())</code></pre>
+    </div>
+
+    <div class="callout success">
+      <div class="callout-icon">✅</div>
+      <div class="callout-body">
+        <strong>Boas práticas com .ui + backend:</strong><br>
+        1. Dê <code>objectName</code>s descritivos no Designer (ex: <code>lineEdit_nome</code>, não <code>lineEdit</code>)<br>
+        2. Nunca edite o arquivo .py gerado pelo <code>pyside6-uic</code> — regere quando precisar mudar o layout<br>
+        3. Toda a lógica fica no backend (<code>.py</code>); o Designer cuida apenas do visual<br>
+        4. Crie um <code>Dialog</code> separado para cada janela modal complexa
+      </div>
+    </div>
+  </section>
+
+
+  <!-- ══════════════════════════════════════════════════
+       12 · PROJETO INTEGRADOR
+  ══════════════════════════════════════════════════ -->
+  <section class="section" id="s12">
+    <div class="section-header">
+      <div class="section-num" style="background: linear-gradient(135deg,#f59e0b,#ef4444);">🏆</div>
+      <div>
+        <div class="section-title">Projeto Integrador — Sistema de Notas</div>
+        <div class="section-sub">Aplicação completa: janela, diálogo customizado, lista e arquivo</div>
+      </div>
+    </div>
+
+    <p>
+      Projeto final que une tudo que foi aprendido: <code>QMainWindow</code>, layouts,
+      widgets variados, signals &amp; slots, <code>QDialog</code> e leitura/escrita de arquivo JSON.
+      <strong>Totalmente sem Qt Designer</strong> — tudo em código puro, para consolidar o aprendizado.
+    </p>
+
+    <div class="code-block">
+      <div class="code-header">
+        <span class="code-lang">python</span>
+        <span class="code-filename">sistema_notas.py</span>
+        <button class="copy-btn" onclick="copyCode(this)">Copiar</button>
+      </div>
+      <pre><code class="language-python">"""
+Sistema de Notas — Projeto Integrador PySide6
+Funcionalidades:
+  - Cadastrar alunos com nome e três notas
+  - Calcular média automaticamente
+  - Listar todos na tabela
+  - Editar e excluir registros
+  - Salvar/carregar em JSON
+"""
+
+import sys
+import json
+import os
+from PySide6.QtWidgets import (
+    QApplication, QMainWindow, QWidget,
+    QVBoxLayout, QHBoxLayout,
+    QLabel, QPushButton, QTableWidget, QTableWidgetItem,
+    QDialog, QDialogButtonBox, QFormLayout,
+    QLineEdit, QDoubleSpinBox, QMessageBox
+)
+from PySide6.QtCore import Qt
+from PySide6.QtGui import QColor, QFont
+
+ARQUIVO_JSON = "notas.json"
+
+# ══════════════════════════════════════════════════════════════
+# Diálogo para adicionar / editar aluno
+# ══════════════════════════════════════════════════════════════
+
+class DialogAluno(QDialog):
+    def __init__(self, parent=None, dados=None):
+        super().__init__(parent)
+        self.setWindowTitle("Novo Aluno" if dados is None else "Editar Aluno")
+        self.resize(300, 220)
+
+        layout = QVBoxLayout(self)
+        form = QFormLayout()
+
+        self.campo_nome = QLineEdit()
+
+        # Três QDoubleSpinBox para as notas
+        self.nota1 = QDoubleSpinBox(); self.nota1.setRange(0, 10); self.nota1.setDecimals(1)
+        self.nota2 = QDoubleSpinBox(); self.nota2.setRange(0, 10); self.nota2.setDecimals(1)
+        self.nota3 = QDoubleSpinBox(); self.nota3.setRange(0, 10); self.nota3.setDecimals(1)
+
+        form.addRow("Nome:",   self.campo_nome)
+        form.addRow("Nota 1:", self.nota1)
+        form.addRow("Nota 2:", self.nota2)
+        form.addRow("Nota 3:", self.nota3)
+        layout.addLayout(form)
+
+        botoes = QDialogButtonBox(QDialogButtonBox.Ok | QDialogButtonBox.Cancel)
+        botoes.accepted.connect(self._validar)
+        botoes.rejected.connect(self.reject)
+        layout.addWidget(botoes)
+
+        # Pré-preencher se estiver editando
+        if dados:
+            self.campo_nome.setText(dados["nome"])
+            self.nota1.setValue(dados["nota1"])
+            self.nota2.setValue(dados["nota2"])
+            self.nota3.setValue(dados["nota3"])
+
+    def _validar(self):
+        if not self.campo_nome.text().strip():
+            QMessageBox.warning(self, "Atenção", "O nome do aluno é obrigatório.")
+            return
+        self.accept()
+
+    def obter_dados(self):
+        n1 = self.nota1.value()
+        n2 = self.nota2.value()
+        n3 = self.nota3.value()
+        return {
+            "nome":  self.campo_nome.text().strip(),
+            "nota1": n1,
+            "nota2": n2,
+            "nota3": n3,
+            "media": round((n1 + n2 + n3) / 3, 2)
+        }
+
+
+# ══════════════════════════════════════════════════════════════
+# Janela Principal
+# ══════════════════════════════════════════════════════════════
+
+class SistemaNotas(QMainWindow):
+    def __init__(self):
+        super().__init__()
+        self.setWindowTitle("📚 Sistema de Notas — SENAI")
+        self.resize(720, 520)
+        self.centralizar()
+
+        self.alunos = []  # lista de dicts em memória
+
+        self._criar_ui()
+        self._carregar_json()
+
+    def centralizar(self):
+        tela = self.screen().availableGeometry()
+        self.move(
+            (tela.width()  - self.width())  // 2,
+            (tela.height() - self.height()) // 2
+        )
+
+    def _criar_ui(self):
+        central = QWidget()
+        self.setCentralWidget(central)
+        root = QVBoxLayout(central)
+        root.setContentsMargins(16, 16, 16, 16)
+        root.setSpacing(12)
+
+        # Título
+        titulo = QLabel("Sistema de Controle de Notas")
+        titulo.setFont(QFont("Segoe UI", 16, QFont.Bold))
+        titulo.setAlignment(Qt.AlignCenter)
+        root.addWidget(titulo)
+
+        # Barra de botões
+        barra = QHBoxLayout()
+        self.btn_novo    = QPushButton("✚ Novo Aluno")
+        self.btn_editar  = QPushButton("✏️  Editar")
+        self.btn_excluir = QPushButton("🗑  Excluir")
+        self.btn_salvar  = QPushButton("💾 Salvar JSON")
+
+        self.btn_editar.setEnabled(False)
+        self.btn_excluir.setEnabled(False)
+
+        for b in [self.btn_novo, self.btn_editar, self.btn_excluir, self.btn_salvar]:
+            barra.addWidget(b)
+        root.addLayout(barra)
+
+        # Tabela
+        self.tabela = QTableWidget()
+        self.tabela.setColumnCount(6)
+        self.tabela.setHorizontalHeaderLabels(
+            ["Nome", "Nota 1", "Nota 2", "Nota 3", "Média", "Situação"]
+        )
+        self.tabela.setSelectionBehavior(QTableWidget.SelectRows)
+        self.tabela.setEditTriggers(QTableWidget.NoEditTriggers)
+        self.tabela.horizontalHeader().setStretchLastSection(True)
+        root.addWidget(self.tabela)
+
+        # Rodapé
+        self.label_rodape = QLabel("Nenhum aluno cadastrado.")
+        self.label_rodape.setAlignment(Qt.AlignCenter)
+        root.addWidget(self.label_rodape)
+
+        # ── Signals ──────────────────────────────────────
+        self.btn_novo.clicked.connect(self.novo_aluno)
+        self.btn_editar.clicked.connect(self.editar_aluno)
+        self.btn_excluir.clicked.connect(self.excluir_aluno)
+        self.btn_salvar.clicked.connect(self.salvar_json)
+        self.tabela.itemSelectionChanged.connect(self._atualizar_botoes)
+
+    # ── Operações CRUD ────────────────────────────────────
+
+    def novo_aluno(self):
+        dlg = DialogAluno(self)
+        if dlg.exec() == QDialog.Accepted:
+            self.alunos.append(dlg.obter_dados())
+            self._atualizar_tabela()
+
+    def editar_aluno(self):
+        linha = self.tabela.currentRow()
+        if linha < 0: return
+        dlg = DialogAluno(self, dados=self.alunos[linha])
+        if dlg.exec() == QDialog.Accepted:
+            self.alunos[linha] = dlg.obter_dados()
+            self._atualizar_tabela()
+
+    def excluir_aluno(self):
+        linha = self.tabela.currentRow()
+        if linha < 0: return
+        nome = self.alunos[linha]["nome"]
+        resp = QMessageBox.question(
+            self, "Confirmar",
+            f"Excluir {nome}?",
+            QMessageBox.Yes | QMessageBox.No
+        )
+        if resp == QMessageBox.Yes:
+            self.alunos.pop(linha)
+            self._atualizar_tabela()
+
+    # ── Tabela ────────────────────────────────────────────
+
+    def _atualizar_tabela(self):
+        self.tabela.setRowCount(0)
+        for aluno in self.alunos:
+            r = self.tabela.rowCount()
+            self.tabela.insertRow(r)
+            media = aluno["media"]
+            situacao = "Aprovado ✅" if media >= 6 else "Reprovado ❌"
+            cor_bg = QColor("#1a3a2a") if media >= 6 else QColor("#3a1a1a")
+
+            valores = [
+                aluno["nome"],
+                f'{aluno["nota1"]:.1f}',
+                f'{aluno["nota2"]:.1f}',
+                f'{aluno["nota3"]:.1f}',
+                f'{media:.2f}',
+                situacao
+            ]
+            for c, v in enumerate(valores):
+                item = QTableWidgetItem(v)
+                item.setTextAlignment(Qt.AlignCenter if c > 0 else Qt.AlignLeft | Qt.AlignVCenter)
+                item.setBackground(cor_bg)
+                self.tabela.setItem(r, c, item)
+
+        total = len(self.alunos)
+        aprovados = sum(1 for a in self.alunos if a["media"] >= 6)
+        self.label_rodape.setText(
+            f"Total: {total} aluno(s) | Aprovados: {aprovados} | Reprovados: {total - aprovados}"
+        )
+
+    def _atualizar_botoes(self):
+        selecionado = self.tabela.currentRow() >= 0
+        self.btn_editar.setEnabled(selecionado)
+        self.btn_excluir.setEnabled(selecionado)
+
+    # ── Persistência JSON ─────────────────────────────────
+
+    def salvar_json(self):
+        with open(ARQUIVO_JSON, "w", encoding="utf-8") as f:
+            json.dump(self.alunos, f, ensure_ascii=False, indent=2)
+        self.statusBar().showMessage(f"Salvo em {ARQUIVO_JSON}", 3000)
+
+    def _carregar_json(self):
+        if os.path.exists(ARQUIVO_JSON):
+            with open(ARQUIVO_JSON, "r", encoding="utf-8") as f:
+                self.alunos = json.load(f)
+            self._atualizar_tabela()
+
+
+if __name__ == "__main__":
+    app = QApplication(sys.argv)
+    janela = SistemaNotas()
+    janela.show()
+    sys.exit(app.exec())</code></pre>
+    </div>
+
+    <div class="exercise">
+      <div class="exercise-header">
+        <span class="exercise-badge">Desafio Final</span>
+        <span class="exercise-title">Expanda o Sistema de Notas</span>
+      </div>
+      <ol>
+        <li>Adicione um campo de <strong>busca</strong> (<code>QLineEdit</code>) que filtra a tabela por nome em tempo real</li>
+        <li>Adicione um <strong>gráfico de barras</strong> simples mostrando as médias (use <code>QProgressBar</code> dentro de um <code>QScrollArea</code>)</li>
+        <li>Crie a interface de <strong>cadastro no Qt Designer</strong> e conecte ao backend existente</li>
+        <li>Adicione um <code>QComboBox</code> para filtrar por situação (Todos / Aprovados / Reprovados)</li>
+        <li>Exporte os dados para um arquivo <strong>CSV</strong> usando o módulo <code>csv</code> do Python</li>
+      </ol>
+    </div>
+
+    <hr>
+
+    <div class="callout info">
+      <div class="callout-icon">📚</div>
+      <div class="callout-body">
+        <strong>Próximos passos:</strong> Após dominar esta apostila, explore:
+        <br>• <strong>QTableView + QAbstractTableModel</strong> — modelo/visão para grandes volumes de dados
+        <br>• <strong>QThread</strong> — operações em background sem travar a interface
+        <br>• <strong>SQLite com PySide6</strong> — persistência com banco de dados local
+        <br>• <strong>QCharts</strong> — gráficos nativos do Qt
+        <br>• <strong>PyInstaller</strong> — empacotar a aplicação em .exe
+      </div>
+    </div>
+
+  </section>
+
+</main>
+
+<script>
+// ── Syntax highlighting ──────────────────────────────────────
+document.addEventListener("DOMContentLoaded", () => {
+  hljs.highlightAll();
+});
+
+// ── Copy buttons ─────────────────────────────────────────────
+function copyCode(btn) {
+  const pre = btn.closest(".code-block").querySelector("pre code");
+  navigator.clipboard.writeText(pre.innerText).then(() => {
+    btn.textContent = "Copiado!";
+    btn.classList.add("copied");
+    setTimeout(() => {
+      btn.textContent = "Copiar";
+      btn.classList.remove("copied");
+    }, 1800);
+  });
+}
+
+// ── Progress bar on scroll ────────────────────────────────────
+window.addEventListener("scroll", () => {
+  const el = document.getElementById("progress-bar");
+  const h  = document.documentElement;
+  const pct = (h.scrollTop / (h.scrollHeight - h.clientHeight)) * 100;
+  el.style.width = pct + "%";
+});
+
+// ── Active nav item ───────────────────────────────────────────
+const sections  = document.querySelectorAll(".section");
+const navItems  = document.querySelectorAll(".nav-item");
+
+const observer = new IntersectionObserver(entries => {
+  entries.forEach(e => {
+    if (e.isIntersecting) {
+      navItems.forEach(n => n.classList.remove("active"));
+      const active = document.querySelector(`.nav-item[href="#${e.target.id}"]`);
+      if (active) active.classList.add("active");
+    }
+  });
+}, { threshold: 0.3 });
+
+sections.forEach(s => observer.observe(s));
+</script>
+</body>
+</html>
