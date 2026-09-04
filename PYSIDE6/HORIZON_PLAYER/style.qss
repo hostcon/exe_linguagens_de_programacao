@@ -1,0 +1,93 @@
+/* Fundo principal da aplicação */
+QMainWindow {
+    background-color: #0F172A; /* Azul marinho escuro moderno */
+    color: #F8FAFC;
+}
+
+/* Rótulo de título e música */
+QLabel#label_musica {
+    color: #38BDF8; /* Azul claro ciano */
+    font-size: 15px;
+    font-weight: bold;
+    padding: 8px;
+}
+
+/* Lista de reprodução com scroll */
+QListWidget {
+    background-color: #1E293B;
+    border: 1px solid #334155;
+    border-radius: 8px;
+    color: #E2E8F0;
+    padding: 6px;
+    font-size: 13px;
+}
+
+QListWidget::item {
+    padding: 6px;
+    border-radius: 4px;
+}
+
+QListWidget::item:hover {
+    background-color: #334155;
+}
+
+QListWidget::item:selected {
+    background-color: #0284C7; /* Azul destaque */
+    color: #FFFFFF;
+}
+
+/* Barra de rolagem personalizada da playlist */
+QScrollBar:vertical {
+    background: #1E293B;
+    width: 10px;
+    border-radius: 5px;
+}
+
+QScrollBar::handle:vertical {
+    background: #475569;
+    min-height: 20px;
+    border-radius: 5px;
+}
+
+QScrollBar::handle:vertical:hover {
+    background: #0284C7;
+}
+
+/* Botões de controle */
+QPushButton {
+    background-color: #1E293B;
+    border: 1px solid #38BDF8;
+    border-radius: 6px;
+    color: #FFFFFF;
+    padding: 6px 12px;
+    font-weight: bold;
+}
+
+QPushButton:hover {
+    background-color: #0284C7;
+}
+
+QPushButton:pressed {
+    background-color: #0369A1;
+}
+
+/* Sliders de progresso e volume */
+QSlider::groove:horizontal {
+    height: 6px;
+    background: #334155;
+    border-radius: 3px;
+}
+
+QSlider::sub-page:horizontal {
+    background: #38BDF8;
+    border-radius: 3px;
+}
+
+QSlider::handle:horizontal {
+    background: #F8FAFC;
+    border: 1px solid #38BDF8;
+    width: 14px;
+    margin-top: -4px;
+    margin-bottom: -4px;
+    border-radius: 7px;
+}

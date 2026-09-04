@@ -1,0 +1,432 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Horizon Player — Como o código funciona</title>
+<style>
+  :root{
+    --bg: #0d1117;
+    --bg-panel: #131a24;
+    --bg-code: #0a0e14;
+    --border: #223047;
+    --text: #dbe4f0;
+    --text-dim: #8a99ad;
+    --amber: #f2a65a;
+    --pink: #ee6c9b;
+    --teal: #4fd1c5;
+    --mono: "SFMono-Regular", Consolas, "Liberation Mono", Menlo, monospace;
+    --sans: -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  }
+  *{box-sizing:border-box;}
+  html,body{margin:0;padding:0;}
+  body{
+    background:var(--bg);
+    color:var(--text);
+    font-family:var(--sans);
+    line-height:1.65;
+    font-size:16px;
+  }
+  .wrap{max-width:760px;margin:0 auto;padding:56px 24px 120px;}
+
+  header.hero{
+    padding-bottom:36px;
+    margin-bottom:40px;
+    border-bottom:1px solid var(--border);
+  }
+  header.hero .kicker{
+    font-family:var(--mono);
+    font-size:13px;
+    color:var(--teal);
+    margin-bottom:10px;
+  }
+  header.hero h1{
+    font-size:34px;
+    line-height:1.2;
+    margin:0 0 14px;
+    background:linear-gradient(90deg,var(--amber),var(--pink));
+    -webkit-background-clip:text;
+    background-clip:text;
+    color:transparent;
+  }
+  header.hero p{color:var(--text-dim);max-width:60ch;margin:0;}
+
+  nav.toc{
+    background:var(--bg-panel);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:18px 22px;
+    margin-bottom:48px;
+  }
+  nav.toc div.label{font-size:13px;color:var(--text-dim);margin-bottom:8px;}
+  nav.toc ol{margin:0;padding-left:20px;}
+  nav.toc li{margin:4px 0;}
+  nav.toc a{color:var(--text);text-decoration:none;border-bottom:1px dotted var(--border);}
+  nav.toc a:hover{color:var(--teal);border-color:var(--teal);}
+
+  section{margin-bottom:56px;}
+  h2{
+    font-size:22px;
+    margin:0 0 6px;
+    padding-top:8px;
+    color:#fff;
+  }
+  h2 .num{color:var(--text-dim);font-family:var(--mono);font-size:15px;margin-right:10px;}
+  h3{font-size:17px;color:var(--teal);margin:28px 0 10px;}
+  p{margin:0 0 14px;}
+  ul,ol{padding-left:22px;margin:0 0 14px;}
+  li{margin:4px 0;}
+  strong{color:#fff;}
+  code{
+    font-family:var(--mono);
+    background:rgba(79,209,197,0.12);
+    color:var(--teal);
+    padding:1px 6px;
+    border-radius:4px;
+    font-size:0.9em;
+  }
+  pre{
+    background:var(--bg-code);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:16px 18px;
+    overflow-x:auto;
+    margin:14px 0 20px;
+  }
+  pre code{
+    background:none;
+    color:#c9d6e3;
+    padding:0;
+    font-size:13.5px;
+    line-height:1.55;
+  }
+  .kw{color:var(--pink);}
+  .fn{color:var(--teal);}
+  .cm{color:var(--text-dim);font-style:italic;}
+  .str{color:var(--amber);}
+
+  .callout{
+    border-left:3px solid var(--teal);
+    background:rgba(79,209,197,0.06);
+    padding:12px 18px;
+    border-radius:0 8px 8px 0;
+    margin:16px 0 20px;
+  }
+  .callout.warn{border-left-color:var(--pink);background:rgba(238,108,155,0.06);}
+  .callout p:last-child{margin-bottom:0;}
+  .callout .tag{
+    font-family:var(--mono);
+    font-size:12px;
+    text-transform:uppercase;
+    letter-spacing:0.04em;
+    color:var(--teal);
+    display:block;margin-bottom:6px;
+  }
+  .callout.warn .tag{color:var(--pink);}
+
+  table{border-collapse:collapse;width:100%;margin:14px 0 22px;font-size:14.5px;}
+  th,td{border:1px solid var(--border);padding:9px 12px;text-align:left;vertical-align:top;}
+  th{background:var(--bg-panel);color:var(--text-dim);font-weight:600;font-size:13px;}
+  td code{white-space:nowrap;}
+
+  .diagram{
+    background:var(--bg-panel);
+    border:1px solid var(--border);
+    border-radius:10px;
+    padding:22px;
+    margin:16px 0 22px;
+    font-family:var(--mono);
+    font-size:13.5px;
+    color:var(--text-dim);
+    white-space:pre;
+    overflow-x:auto;
+  }
+  .diagram b{color:var(--teal);}
+  .diagram i{color:var(--amber);font-style:normal;}
+
+  footer{
+    margin-top:60px;
+    padding-top:24px;
+    border-top:1px solid var(--border);
+    color:var(--text-dim);
+    font-size:13.5px;
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <div class="kicker">MATERIAL DE APOIO · SENAI</div>
+  <h1>Horizon Media Player</h1>
+  <p>Como <code>main.py</code> e <code>interface_ui.py</code> conversam entre si, como acessar os widgets do Qt Designer, como funcionam os seletores QSS e o que é realmente possível fazer com um equalizador animado.</p>
+</header>
+
+<nav class="toc">
+  <div class="label">Neste material</div>
+  <ol>
+    <li><a href="#arq">Os três arquivos e como se relacionam</a></li>
+    <li><a href="#composicao">Composição vs. herança — é uma superclasse?</a></li>
+    <li><a href="#init">O que acontece dentro do <code>__init__</code></a></li>
+    <li><a href="#sinais">Sinais e slots — o sistema nervoso do app</a></li>
+    <li><a href="#fluxo">O ciclo de vida de uma música tocando</a></li>
+    <li><a href="#mods">As duas modificações pedidas (avançar faixa / deletar)</a></li>
+    <li><a href="#qss">Seletores QSS: funcionam como CSS?</a></li>
+    <li><a href="#eq">Visualização animada tipo equalizador</a></li>
+    <li><a href="#exe">Gerando um executável (Windows e Linux)</a></li>
+  </ol>
+</nav>
+
+<section id="arq">
+  <h2><span class="num">01</span>Os três arquivos e como se relacionam</h2>
+  <p>Um projeto Qt Designer + PySide6 típico tem sempre essa mesma engrenagem de três peças:</p>
+
+  <div class="diagram"><b>interface.ui</b>  (XML — desenhado visualmente no Qt Designer)
+      │
+      │  pyside6-uic (compilador)
+      ▼
+<b>interface_ui.py</b>  (Python GERADO — classe Ui_MainWindow)
+      │
+      │  importado por
+      ▼
+<i>main.py</i>  (código escrito à mão — classe HorizonPlayer)</div>
+
+  <p><strong>interface.ui</strong> é o arquivo XML que o Qt Designer salva quando você arrasta botões, listas e sliders na tela. Ele não tem lógica nenhuma, só descreve a geometria e os nomes (<code>objectName</code>) de cada widget.</p>
+
+  <p><strong>interface_ui.py</strong> é gerado automaticamente a partir do <code>.ui</code> pelo compilador <code>pyside6-uic</code>. O próprio cabeçalho do arquivo avisa: <em>"WARNING! All changes made in this file will be lost when recompiling UI file!"</em> — ou seja, é um arquivo descartável e regenerável. Nunca se edita esse arquivo na mão; qualquer ajuste de interface deve ser feito de volta no Designer (ou, em projetos mais avançados, via QSS/código em cima dele).</p>
+
+  <p><strong>main.py</strong> é o único arquivo com lógica de negócio: é onde vive a classe <code>HorizonPlayer</code>, que sabe tocar música, montar playlist, reagir a cliques etc. Ele importa a classe gerada e a usa — é aqui que mora toda a resposta da próxima seção.</p>
+</section>
+
+<section id="composicao">
+  <h2><span class="num">02</span>Composição vs. herança — é uma superclasse?</h2>
+
+  <p>Essa é a pergunta mais importante do material, porque é fácil confundir os dois padrões possíveis. A resposta curta: <strong>não, <code>Ui_MainWindow</code> não é superclasse de <code>HorizonPlayer</code></strong>. O que existe aqui é <strong>composição</strong> (uma relação "tem-um"), não <strong>herança</strong> (uma relação "é-um").</p>
+
+  <p>Repare na declaração da classe:</p>
+  <pre><code><span class="kw">class</span> <span class="fn">HorizonPlayer</span>(QMainWindow):</code></pre>
+  <p><code>HorizonPlayer</code> herda só de <code>QMainWindow</code>. <code>Ui_MainWindow</code> nem aparece na lista de heranças. Em vez disso, dentro do <code>__init__</code>:</p>
+  <pre><code>self.ui = Ui_MainWindow()   <span class="cm"># cria um OBJETO separado</span>
+self.ui.setupUi(self)      <span class="cm"># injeta os widgets dentro da janela</span></code></pre>
+
+  <p>O truque está no método <code>setupUi(self)</code>. Dentro de <code>interface_ui.py</code>, cada widget é criado assim:</p>
+  <pre><code><span class="kw">def</span> <span class="fn">setupUi</span>(self, MainWindow):
+    self.centralwidget = QWidget(MainWindow)
+    self.label_musica  = QLabel(self.centralwidget)
+    self.btn_abrir      = QPushButton(self.centralwidget)
+    <span class="cm"># ...</span>
+    MainWindow.setCentralWidget(self.centralwidget)</code></pre>
+
+  <p>Note que, dentro desse método, <code>self</code> é a instância de <code>Ui_MainWindow</code> — não a janela. Então <code>self.btn_abrir</code> vira um atributo do <em>objeto <code>Ui_MainWindow</code></em>. O parâmetro <code>MainWindow</code> (que é o <code>self</code> do <code>HorizonPlayer</code>, passado lá do <code>main.py</code>) só é usado para "plugar" o widget central e a barra de menu na janela de verdade — ele nunca ganha os botões como atributos diretos.</p>
+
+  <p>É por isso que, em qualquer lugar do <code>main.py</code>, você acessa um widget como <strong><code>self.ui.btn_abrir</code></strong>, e não <code>self.btn_abrir</code>: o caminho de acesso passa sempre pelo objeto intermediário <code>self.ui</code>.</p>
+
+  <div class="callout">
+    <span class="tag">Existe a alternativa por herança</span>
+    <p>O próprio Qt/PySide6 permite outro padrão, por <strong>herança múltipla</strong>, que você provavelmente vai ver em outros tutoriais:</p>
+    <pre style="margin-top:10px"><code><span class="kw">class</span> <span class="fn">HorizonPlayer</span>(QMainWindow, Ui_MainWindow):
+    <span class="kw">def</span> <span class="fn">__init__</span>(self):
+        <span class="kw">super</span>().__init__()
+        self.setupUi(self)  <span class="cm"># aqui sim, self.btn_abrir existiria direto</span></code></pre>
+    <p>Nesse segundo modelo, <code>Ui_MainWindow</code> seria de fato uma superclasse, e os widgets virariam atributos diretos de <code>self</code> (sem o <code>.ui</code> no meio). Funciona, mas mistura a classe "de negócio" com a classe "gerada", o que dificulta separar o que é seu código do que é gerado. <strong>O Horizon Player usa o primeiro padrão (composição)</strong>, que é o mais recomendado hoje em dia justamente por manter essa separação limpa.</p>
+  </div>
+
+  <p>Em resumo, para "buscar" qualquer elemento desenhado no Designer, o caminho mental é sempre:</p>
+  <p style="text-align:center;font-family:var(--mono);color:var(--teal);">objeto da janela → <code>.ui</code> → <code>.nome_do_objeto</code></p>
+  <p>E esse <code>nome_do_objeto</code> é exatamente o texto que você digitou na propriedade <code>objectName</code> lá no Qt Designer — é isso que vira o nome do atributo Python (você pode conferir em <code>interface_ui.py</code>, em linhas como <code>self.btn_abrir.setObjectName(u"btn_abrir")</code>).</p>
+</section>
+
+<section id="init">
+  <h2><span class="num">03</span>O que acontece dentro do <code>__init__</code></h2>
+  <p>Na ordem em que o código executa quando a janela é criada:</p>
+  <table>
+    <tr><th>Passo</th><th>O que faz</th></tr>
+    <tr><td><code>self.ui = Ui_MainWindow(); self.ui.setupUi(self)</code></td><td>Monta toda a interface visual dentro da janela (ver seção 2).</td></tr>
+    <tr><td><code>self.playlist = []</code> / <code>self.indice_atual = -1</code></td><td>Estruturas de dados <em>próprias do main.py</em> — não existem no Designer, são o "cérebro" da playlist.</td></tr>
+    <tr><td><code>QMediaPlayer</code> + <code>QAudioOutput</code></td><td>O motor de reprodução, totalmente separado da interface. <code>QMediaPlayer</code> controla o estado (tocar/pausar); <code>QAudioOutput</code> controla o volume/saída física de som.</td></tr>
+    <tr><td><code>_configurar_icones()</code></td><td>Usa ícones nativos do sistema operacional (<code>QStyle.SP_*</code>) em vez de imagens próprias — deixa o app consistente com o SO sem precisar de arquivos de ícone.</td></tr>
+    <tr><td><code>_conectar_sinais()</code></td><td>Liga todos os eventos (cliques, arrastar slider) às funções que devem reagir a eles.</td></tr>
+  </table>
+</section>
+
+<section id="sinais">
+  <h2><span class="num">04</span>Sinais e slots — o sistema nervoso do app</h2>
+  <p>Qt funciona por <strong>eventos</strong>: um widget <em>emite um sinal</em> quando algo acontece (clique, arrastar, terminar de carregar), e você <em>conecta</em> esse sinal a uma função (o <strong>slot</strong>) que deve rodar em resposta. É exatamente isso que <code>_conectar_sinais()</code> faz — e repare que a comunicação acontece nos <strong>dois sentidos</strong>:</p>
+  <table>
+    <tr><th>Sinal (emissor)</th><th>Slot (reage)</th><th>Sentido</th></tr>
+    <tr><td><code>btn_abrir.clicked</code></td><td><code>abrir_arquivos()</code></td><td>Interface → lógica</td></tr>
+    <tr><td><code>btn_play.clicked</code></td><td><code>player.play</code></td><td>Interface → player</td></tr>
+    <tr><td><code>lista_musicas.itemDoubleClicked</code></td><td><code>tocar_musica_selecionada()</code></td><td>Interface → lógica</td></tr>
+    <tr><td><code>slider_volume.valueChanged</code></td><td><code>lambda v: audio_output.setVolume(...)</code></td><td>Interface → player</td></tr>
+    <tr><td><code>player.positionChanged</code></td><td><code>atualizar_posicao()</code></td><td>Player → interface</td></tr>
+    <tr><td><code>player.durationChanged</code></td><td><code>atualizar_duracao()</code></td><td>Player → interface</td></tr>
+    <tr><td><code>player.mediaStatusChanged</code></td><td><code>verificar_fim_da_faixa()</code></td><td>Player → lógica (autoavançar)</td></tr>
+  </table>
+  <p>As três últimas linhas são as mais importantes de entender: o <code>QMediaPlayer</code> também emite sinais próprios (ele está tocando em segundo plano, avançando posição a cada fração de segundo), e é isso que mantém o slider de progresso e os rótulos de tempo sincronizados sem que você precise ficar checando manualmente em loop.</p>
+</section>
+
+<section id="fluxo">
+  <h2><span class="num">05</span>O ciclo de vida de uma música tocando</h2>
+  <ol>
+    <li><code>abrir_arquivos()</code> — abre o <code>QFileDialog</code> nativo, filtra por extensões de áudio, e para cada arquivo escolhido guarda <code>{"nome", "caminho"}</code> em <code>self.playlist</code> e adiciona a linha visual na <code>QListWidget</code>.</li>
+    <li>Se nada estava tocando ainda, chama <code>carregar_e_tocar(0)</code> automaticamente.</li>
+    <li><code>carregar_e_tocar(indice)</code> é o método central: define a fonte de áudio (<code>QUrl.fromLocalFile</code>), atualiza o rótulo, destaca a linha correspondente na lista e manda tocar.</li>
+    <li>Enquanto toca, <code>atualizar_posicao</code>/<code>atualizar_duracao</code> mantêm o slider e os rótulos <code>MM:SS</code> em dia — com uma checagem (<code>isSliderDown()</code>) para não "brigar" com o mouse do usuário quando ele está arrastando o slider manualmente.</li>
+    <li>Quando a faixa termina, <code>verificar_fim_da_faixa()</code> detecta o status <code>EndOfMedia</code> e chama <code>carregar_e_tocar()</code> de novo com o próximo índice — é assim que a playlist "anda sozinha".</li>
+  </ol>
+</section>
+
+<section id="mods">
+  <h2><span class="num">06</span>As duas modificações pedidas</h2>
+  <p>Ambas estão detalhadas <strong>como comentários</strong> dentro do arquivo <code>main_comentado.py</code> (em anexo), exatamente ao lado dos métodos que elas afetam, para não misturar explicação com código funcional.</p>
+
+  <h3>Transformar avançar/retroceder em próxima/anterior faixa</h3>
+  <p>A ideia central: <code>avancar_10s</code>/<code>retroceder_10s</code> hoje fazem <em>seek de tempo</em> (<code>player.position() ± 10_000</code>) dentro da mesma faixa. Para virar navegação de faixa, basta trocar essa conta por movimentação do <code>self.indice_atual</code> e delegar para <code>carregar_e_tocar()</code>, que já sabe trocar a fonte, atualizar o rótulo e destacar a linha — nada disso precisa ser duplicado.</p>
+
+  <h3>Deletar música(s) da lista com a tecla Delete</h3>
+  <p>Toda <code>QWidget</code> (logo, toda <code>QMainWindow</code>) já recebe eventos de teclado via <code>keyPressEvent(self, event)</code>. Basta <strong>sobrescrever</strong> esse método na classe <code>HorizonPlayer</code>, checar <code>event.key() == Qt.Key_Delete</code>, pegar a(s) linha(s) selecionada(s), remover com <code>takeItem()</code> (da lista visual) e <code>del self.playlist[linha]</code> (da estrutura de dados) — com o cuidado extra de reajustar <code>self.indice_atual</code> caso a música removida seja a que está tocando ou esteja antes dela na lista.</p>
+
+  <h3>Selecionar tudo (Ctrl+A) e apagar em lote</h3>
+  <p>Para ir além de "uma música por vez", duas peças precisam se encaixar:</p>
+  <ul>
+    <li><strong>Permitir seleção múltipla:</strong> por padrão o <code>QListWidget</code> só seleciona um item por vez. É preciso trocar o modo de seleção uma única vez, com <code>lista_musicas.setSelectionMode(QAbstractItemView.ExtendedSelection)</code>, para habilitar Ctrl+clique, Shift+clique e a seleção total.</li>
+    <li><strong>Selecionar tudo:</strong> <code>QListWidget</code> herda de <code>QAbstractItemView</code>, que já vem com o método <code>selectAll()</code> pronto — não é preciso reimplementar nada, só chamar <code>lista_musicas.selectAll()</code> quando o atalho <strong>Ctrl+A</strong> for detectado (<code>event.key() == Qt.Key_A and event.modifiers() == Qt.ControlModifier</code>).</li>
+  </ul>
+  <p>Com isso, o <code>Delete</code> passa a apagar <strong>todas</strong> as linhas selecionadas de uma vez, não só uma. O detalhe técnico que evita bugs aqui é a <strong>ordem de remoção</strong>: as linhas selecionadas precisam ser processadas em <strong>ordem decrescente</strong> (da última para a primeira). Se removêssemos da primeira para a última, cada remoção deslocaria os índices das linhas seguintes ainda por remover, fazendo o código apagar a música errada. Removendo de trás para frente, os índices das linhas anteriores nunca mudam durante o laço.</p>
+</section>
+
+<section id="qss">
+  <h2><span class="num">07</span>Seletores QSS: funcionam como CSS?</h2>
+  <p><strong>Em grande parte, sim</strong> — QSS (Qt Style Sheets) foi desenhado deliberadamente para parecer familiar a quem já conhece CSS2, e a maioria dos seletores tem equivalente direto:</p>
+  <table>
+    <tr><th>Seletor</th><th>Exemplo</th><th>Equivalente em CSS</th></tr>
+    <tr><td>Por tipo de widget</td><td><code>QPushButton { ... }</code></td><td><code>button { ... }</code></td></tr>
+    <tr><td>Por <code>objectName</code> (ID)</td><td><code>#btn_play { ... }</code></td><td><code>#btn_play { ... }</code></td></tr>
+    <tr><td>Por propriedade dinâmica</td><td><code>QPushButton[tocando="true"] { ... }</code></td><td><code>button[data-x="y"]</code></td></tr>
+    <tr><td>Pseudo-estados</td><td><code>QPushButton:hover</code>, <code>:pressed</code>, <code>:disabled</code>, <code>:checked</code></td><td><code>:hover</code>, <code>:active</code>, <code>:disabled</code></td></tr>
+    <tr><td>Sub-controles (partes internas de um widget composto)</td><td><code>QSlider::handle</code>, <code>QSlider::groove</code></td><td><code>::before</code>, <code>::part()</code></td></tr>
+    <tr><td>Descendentes</td><td><code>QListWidget::item</code></td><td><code>ul li</code></td></tr>
+  </table>
+
+  <div class="callout warn">
+    <span class="tag">A diferença que mais pega alunos de surpresa</span>
+    <p>O QSS implementa apenas um <strong>subconjunto</strong> do CSS2 e <strong>não tem</strong> <code>@keyframes</code>, nem a propriedade <code>transition</code>, nem <code>animation</code>. Uma folha de estilos QSS é sempre <strong>estática</strong>: ela define a <em>aparência</em> (cores, bordas, espaçamento, estado hover/pressed), mas não consegue, sozinha, fazer nada mudar de valor ao longo do tempo. Qualquer coisa que "se mexe" precisa vir de código Python (um <code>QTimer</code>, uma <code>QPropertyAnimation</code>, ou simplesmente trocar um valor e chamar <code>repaint()</code>).</p>
+  </div>
+</section>
+
+<section id="eq">
+  <h2><span class="num">08</span>Visualização animada tipo equalizador — é possível com QSS?</h2>
+
+  <p>Direto ao ponto: <strong>não só com QSS</strong>. QSS por si só nunca vai fazer barras "dançarem" sozinhas, porque — como vimos acima — ele não tem conceito de animação nem de valor variável no tempo. O que o QSS <em>pode</em> fazer é cuidar da <strong>aparência estática</strong> de cada barra (cor em gradiente, cantos arredondados, cor diferente quando "ativa"); quem faz a barra <em>mudar de altura a cada instante</em> é sempre código Python, geralmente um <code>QTimer</code> chamando um método a cada 30–50ms para atualizar valores.</p>
+
+  <h3>O obstáculo técnico real: de onde vêm os dados do áudio?</h3>
+  <p>A parte difícil não é desenhar as barras — é conseguir a <strong>amplitude/frequência real</strong> do som em cada instante para saber quão alta cada barra deve ficar. E aqui existe uma limitação importante do PySide6/Qt 6 atual: a classe <code>QMediaPlayer</code> + <code>QAudioOutput</code> (usada no Horizon Player) <strong>não expõe as amostras de áudio brutas</strong> enquanto toca. O recurso que fazia isso no Qt 5 (<code>QAudioProbe</code>) foi removido no módulo <code>QtMultimedia</code> do Qt 6.</p>
+
+  <p>Isso não inviabiliza o projeto — só significa escolher uma entre três estratégias:</p>
+
+  <h3>Estratégia A — envelope pré-calculado (mais simples para uma turma)</h3>
+  <ol>
+    <li>Quando uma música é carregada, ler o arquivo de áudio <em>fora</em> do <code>QMediaPlayer</code>, com uma biblioteca própria de processamento (ex.: <code>numpy</code> + <code>soundfile</code>), e calcular de antemão um "envelope" de volume (RMS) em janelas curtas, por exemplo a cada 50ms.</li>
+    <li>Um <code>QTimer</code> roda enquanto a música toca e, a cada tique, consulta <code>self.player.position()</code> para saber "em que ponto da música estamos agora" e busca o valor de amplitude correspondente nesse envelope pré-calculado.</li>
+    <li>Esse valor (ou uma pequena variação randomizada em torno dele, para simular várias barras de frequência) é usado para ajustar a altura de N widgets simples (podem ser <code>QProgressBar</code> verticais, sem texto, estilizados via QSS para parecerem barrinhas de equalizador).</li>
+  </ol>
+  <p>Essa abordagem funciona muito bem em sala de aula: é sincronizada de verdade com a música (porque usa a posição real do player), não exige trocar o motor de reprodução, e não depende de nenhum recurso removido do Qt 6.</p>
+
+  <h3>Estratégia B — motor de áudio próprio (visualização ao vivo de verdade)</h3>
+  <p>Para ter um espectro <em>realmente</em> calculado em tempo real (FFT ao vivo, como um equalizador de estúdio), seria necessário trocar o <code>QMediaPlayer</code> por uma biblioteca de baixo nível como <code>sounddevice</code> ou <code>pyaudio</code>, que entrega o buffer de áudio bruto conforme ele é reproduzido. Aí sim dá para rodar uma FFT (com <code>numpy</code>) a cada callback e atualizar as barras com dados 100% ao vivo. É mais poderoso, mas troca a arquitetura de reprodução usada hoje — não é um ajuste pontual.</p>
+
+  <h3>Existe alguma biblioteca pronta de visualização?</h3>
+  <p>O PySide6/QtMultimedia <strong>não</strong> traz nenhum widget pronto de espectro/equalizador. As opções do ecossistema Python que ajudam na <em>parte gráfica</em> (não na captura de áudio) são:</p>
+  <ul>
+    <li><strong>pyqtgraph</strong> — biblioteca de gráficos rápidos integrada nativamente com Qt/PySide6; tem <code>BarGraphItem</code> pronto e é a opção mais indicada para atualizar muitos valores por segundo sem travar a interface.</li>
+    <li><strong>matplotlib</strong> embutido via <code>FigureCanvasQTAgg</code> — mais pesado e mais lento para redesenhar a cada 30ms, melhor para gráficos estáticos do que para animação contínua.</li>
+    <li><strong>DIY com <code>QWidget</code> + <code>paintEvent</code></strong> — desenhar os retângulos manualmente com <code>QPainter</code>; dá mais trabalho, mas ensina bem o conceito de desenho customizado no Qt e é leve o suficiente para uma turma implementar do zero.</li>
+  </ul>
+
+  <div class="callout">
+    <span class="tag">Esqueleto de implementação (Estratégia A)</span>
+    <pre><code><span class="cm"># pseudocódigo — não faz parte do main.py, é só ilustrativo</span>
+self.timer_equalizador = QTimer(self)
+self.timer_equalizador.setInterval(50)  <span class="cm"># 20 atualizações por segundo</span>
+self.timer_equalizador.timeout.connect(self.atualizar_barras)
+self.timer_equalizador.start()
+
+<span class="kw">def</span> <span class="fn">atualizar_barras</span>(self):
+    posicao_atual = self.player.position()
+    volume_no_instante = self.envelope.consultar(posicao_atual)
+    <span class="cm"># distribui o valor entre as N barras (QProgressBar verticais,
+    # estilizadas via QSS) com pequenas variações por barra</span>
+    <span class="kw">for</span> barra, fator <span class="kw">in</span> zip(self.barras, self.fatores_por_barra):
+        barra.setValue(int(volume_no_instante * fator))</code></pre>
+  </div>
+
+  <p>Ou seja: o QSS cuida do "figurino" (cor, arredondamento, gradiente das barras); o <code>QTimer</code> + o envelope pré-calculado cuidam do "movimento". Essa divisão — <em>estilo estático via QSS, valor dinâmico via Python</em> — é a mesma lógica que vale para qualquer animação em Qt, não só para equalizadores.</p>
+</section>
+
+<section id="exe">
+  <h2><span class="num">09</span>Gerando um executável (Windows e Linux)</h2>
+
+  <p>A ferramenta mais usada para transformar um projeto PySide6 num executável é o <strong>PyInstaller</strong>. Ele empacota o interpretador Python, as bibliotecas (incluindo o Qt) e o seu código num único pacote que roda sem precisar de Python instalado na máquina do usuário final.</p>
+
+  <div class="callout warn">
+    <span class="tag">A regra mais importante</span>
+    <p>O PyInstaller <strong>não faz cross-compilation</strong>: ele empacota para o sistema operacional em que ele próprio está rodando. Ou seja, para gerar o <code>.exe</code> do Windows, o comando precisa ser executado <strong>dentro de um Windows</strong> (ou numa VM/máquina virtual Windows); para gerar o binário Linux, precisa rodar <strong>dentro de um Linux</strong>. Não existe um único comando que gere os dois de uma vez a partir do mesmo computador.</p>
+  </div>
+
+  <h3>Passo 1 — instalar o PyInstaller</h3>
+  <pre><code>pip install pyinstaller</code></pre>
+  <p>Faça isso no mesmo ambiente virtual (venv) onde o <code>PySide6</code> já está instalado, para o PyInstaller conseguir enxergar a biblioteca.</p>
+
+  <h3>Passo 2 — gerar o executável</h3>
+  <p>Na pasta do projeto (onde estão <code>main.py</code>, <code>interface_ui.py</code> e, se existir, <code>style.qss</code>):</p>
+  <pre><code>pyinstaller --noconsole --onefile --name HorizonPlayer main.py</code></pre>
+  <table>
+    <tr><th>Opção</th><th>Para que serve</th></tr>
+    <tr><td><code>--noconsole</code></td><td>Não abre uma janela de terminal preta junto com o player (essencial para um app com interface gráfica). No Windows, o mesmo efeito também pode ser obtido com <code>--windowed</code>.</td></tr>
+    <tr><td><code>--onefile</code></td><td>Empacota tudo em um único arquivo executável, mais fácil de distribuir (o custo é abrir um pouco mais devagar, pois ele se descompacta em uma pasta temporária a cada execução).</td></tr>
+    <tr><td><code>--name HorizonPlayer</code></td><td>Define o nome do executável gerado (senão usa o nome do script, <code>main</code>).</td></tr>
+  </table>
+
+  <p>O resultado aparece em <code>dist/HorizonPlayer</code> (no Linux) ou <code>dist\HorizonPlayer.exe</code> (no Windows).</p>
+
+  <h3>Passo 3 — incluir arquivos extras (ícone, QSS)</h3>
+  <p>O <code>interface_ui.py</code> é apenas código Python, então ele já vai junto automaticamente — não precisa de tratamento especial. Já arquivos que são <strong>lidos em tempo de execução</strong>, como <code>style.qss</code>, precisam ser adicionados manualmente com <code>--add-data</code>, porque o PyInstaller só enxerga o que é importado via <code>import</code>:</p>
+  <pre><code><span class="cm"># Linux/macOS (separador ":")</span>
+pyinstaller --noconsole --onefile --name HorizonPlayer \
+    --add-data "style.qss:." main.py
+
+<span class="cm"># Windows (separador ";")</span>
+pyinstaller --noconsole --onefile --name HorizonPlayer ^
+    --add-data "style.qss;." main.py</code></pre>
+  <p>Note o separador diferente entre origem e destino: dois-pontos (<code>:</code>) no Linux/macOS, ponto-e-vírgula (<code>;</code>) no Windows — é o erro mais comum de quem copia um comando de um sistema para o outro.</p>
+
+  <div class="callout">
+    <span class="tag">Ícone do executável</span>
+    <p>Para definir o ícone do próprio arquivo <code>.exe</code>/binário (o que aparece no explorador de arquivos), use <code>--icon=caminho/para/icone.ico</code> no Windows (precisa ser <code>.ico</code>) ou <code>--icon=caminho/para/icone.png</code> no Linux.</p>
+  </div>
+
+  <h3>Passo 4 — atenção a "hidden imports" do Qt</h3>
+  <p>Às vezes o PyInstaller não detecta sozinho todos os plugins que o Qt carrega dinamicamente (principalmente plugins de multimídia/codecs de áudio usados pelo <code>QtMultimedia</code>). Se o executável abrir mas a música não tocar, o primeiro passo é rodar sem <code>--onefile</code> primeiro (usando <code>--onedir</code>, que é o padrão) para inspecionar a pasta gerada em <code>dist/</code>, e se necessário forçar a inclusão do módulo:</p>
+  <pre><code>pyinstaller --noconsole --onefile --name HorizonPlayer \
+    --hidden-import PySide6.QtMultimedia main.py</code></pre>
+
+  <h3>Resumo do fluxo para os dois sistemas</h3>
+  <ol>
+    <li>Testar o projeto rodando normalmente (<code>python main.py</code>) em cada sistema antes de empacotar.</li>
+    <li>Rodar o comando do PyInstaller <strong>dentro do Windows</strong> → gera o <code>.exe</code>.</li>
+    <li>Rodar o mesmo comando (ajustando o separador do <code>--add-data</code>) <strong>dentro do Linux</strong> → gera o binário Linux.</li>
+    <li>Testar o executável final numa máquina "limpa" (sem Python/PySide6 instalado), que é o teste real de que o empacotamento funcionou.</li>
+  </ol>
+
+  <div class="callout">
+    <span class="tag">Alternativa</span>
+    <p>Existe também o <strong>Nuitka</strong>, que compila o Python para C e costuma gerar executáveis um pouco mais rápidos e menores que o PyInstaller, com sintaxe parecida (<code>nuitka --onefile --enable-plugin=pyside6 main.py</code>). Vale a pena conhecer, mas para uso didático o PyInstaller é mais simples de explicar e depurar com a turma.</p>
+  </div>
+</section>
+
+<footer>
+  Material de apoio produzido para a turma de PySide6 — Horizon Media Player. Acompanha o arquivo <code>main_comentado.py</code> com o código original comentado e organizado em seções.
+</footer>
+
+</div>
+</body>
+</html>

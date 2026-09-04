@@ -1,0 +1,13 @@
+Configuração do python como ambiente de desenvolvimento no vscode com pyside6:
+
+1- Criar pasta do projeto
+2- Criar arquivo main.py
+3- CRTL+SHITF+P: 
+command: python.createEnvironment
+Recomendado
+
+Instalação do pyside6
+
+command: python-envs.packages
+
+Marque todos os pacotes.
