@@ -1,0 +1,150 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>MainWindow</class>
+ <widget class="QMainWindow" name="MainWindow">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>350</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>🎨 Cores com Botões</string>
+  </property>
+  <widget class="QWidget" name="centralwidget">
+   <layout class="QVBoxLayout" name="verticalLayout">
+    <item>
+     <widget class="QLabel" name="label_info">
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+        <weight>75</weight>
+        <bold>true</bold>
+       </font>
+      </property>
+      <property name="text">
+       <string>Clique nos botões para mudar a cor</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <widget class="QLabel" name="label_amostra">
+      <property name="minimumSize">
+       <size>
+        <width>0</width>
+        <height>80</height>
+       </size>
+      </property>
+      <property name="text">
+       <string>Amostra de Cor</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+      <property name="styleSheet">
+       <string>background-color: #888888; border-radius: 10px; font-size: 16px; color: white;</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QPushButton" name="btn_vermelho">
+        <property name="text">
+         <string>🔴 Vermelho</string>
+        </property>
+        <property name="styleSheet">
+         <string>background-color: #ff0000; color: white; font-weight: bold; padding: 10px;</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btn_verde">
+        <property name="text">
+         <string>🟢 Verde</string>
+        </property>
+        <property name="styleSheet">
+         <string>background-color: #00cc44; color: white; font-weight: bold; padding: 10px;</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btn_azul">
+        <property name="text">
+         <string>🔵 Azul</string>
+        </property>
+        <property name="styleSheet">
+         <string>background-color: #0066ff; color: white; font-weight: bold; padding: 10px;</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <layout class="QHBoxLayout" name="horizontalLayout_2">
+      <item>
+       <widget class="QPushButton" name="btn_amarelo">
+        <property name="text">
+         <string>🟡 Amarelo</string>
+        </property>
+        <property name="styleSheet">
+         <string>background-color: #ffcc00; color: black; font-weight: bold; padding: 10px;</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btn_roxo">
+        <property name="text">
+         <string>🟣 Roxo</string>
+        </property>
+        <property name="styleSheet">
+         <string>background-color: #9900cc; color: white; font-weight: bold; padding: 10px;</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="btn_reset">
+        <property name="text">
+         <string>⬜ Reset</string>
+        </property>
+        <property name="styleSheet">
+         <string>background-color: #666666; color: white; font-weight: bold; padding: 10px;</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
+    </item>
+    <item>
+     <widget class="QPushButton" name="btn_aleatorio">
+      <property name="text">
+       <string>🎲 Cor Aleatória</string>
+      </property>
+      <property name="styleSheet">
+       <string>background-color: #ff6b6b; color: white; font-weight: bold; padding: 10px; font-size: 14px;</string>
+      </property>
+     </widget>
+    </item>
+    <item>
+     <spacer name="verticalSpacer">
+      <property name="orientation">
+       <enum>Qt::Vertical</enum>
+      </property>
+      <property name="sizeHint" stdset="0">
+       <size>
+        <width>20</width>
+        <height>40</height>
+       </size>
+      </property>
+     </spacer>
+    </item>
+   </layout>
+  </widget>
+ </widget>
+ <resources/>
+ <connections/>
+</ui>
